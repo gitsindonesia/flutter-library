@@ -1,5 +1,5 @@
 name: gits_http
-description: A new Flutter package project.
+description: Future-based library for making HTTP requests modified from http package.
 version: 0.0.1
 homepage: https://gits.id/
 repository: https://github.com/gitsindonesia/flutter-library/packages/gits_http

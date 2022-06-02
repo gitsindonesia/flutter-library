@@ -1,5 +1,5 @@
 name: gits_base
-description: A new Flutter package project.
+description: GitsBase is base for UI project include state management with cubit & hydrated.
 version: 0.0.1
 homepage: https://gits.id/
 repository: https://github.com/gitsindonesia/flutter-library/packages/gits_base
