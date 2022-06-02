@@ -1,0 +1,23 @@
+name: gits_base
+description: A new Flutter package project.
+version: 0.0.1
+homepage: https://gits.id/
+repository: https://github.com/gitsindonesia/flutter-library/packages/gits_base
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_bloc: ^8.0.1
+  flutter_secure_storage: ^5.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.1
+
+flutter:
