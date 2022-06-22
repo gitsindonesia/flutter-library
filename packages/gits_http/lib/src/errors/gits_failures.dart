@@ -76,3 +76,17 @@ class InternalFailure extends GitsFailure {
   @override
   List<Object?> get props => [message];
 }
+
+class RefreshTokenFailure extends GitsFailure {
+  const RefreshTokenFailure(
+    String message, {
+    required this.statusCode,
+    required this.jsonBody,
+  }) : super(message);
+
+  final int statusCode;
+  final String jsonBody;
+
+  @override
+  List<Object?> get props => [message, statusCode, jsonBody];
+}

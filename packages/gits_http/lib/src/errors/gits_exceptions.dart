@@ -133,3 +133,30 @@ class InternalException implements GitsException {
   @override
   String toString() => 'InternalException something error with internal code';
 }
+
+class RefreshTokenException implements GitsException, StatusCodeName {
+  RefreshTokenException({
+    required this.statusCode,
+    required this.jsonBody,
+  });
+  final int statusCode;
+  final String jsonBody;
+
+  @override
+  GitsFailure toGitsFailure() {
+    return ServerFailure(
+      toString(),
+      statusCode: statusCode,
+      jsonBody: jsonBody,
+    );
+  }
+
+  @override
+  String toStatusCodeName() {
+    return statusCodeNameByStatusCode(statusCode);
+  }
+
+  @override
+  String toString() =>
+      'RefreshTokenException with status code $statusCode or ${toStatusCodeName()}';
+}
