@@ -4,6 +4,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
+import 'package:gits_http/src/utils/auth_token_option.dart';
+import 'package:gits_http/src/utils/refresh_token_option.dart';
 import 'package:gits_inspector/gits_inspector.dart'
     show GitsInspector, Inspector, RequestInspector, ResponseInspector;
 import 'package:http/http.dart';
@@ -18,10 +20,14 @@ class GitsHttp implements Client {
     GitsInspector? gitsInspector,
     bool showLog = true,
     Map<String, String>? headers,
+    AuthTokenOption? authTokenOption,
+    RefreshTokenOption? refreshTokenOption,
   })  : _timeout = timeout,
         _gitsInspector = gitsInspector,
         _showLog = showLog,
-        _headers = headers;
+        _headers = headers,
+        _authTokenOption = authTokenOption,
+        _refreshTokenOption = refreshTokenOption;
 
   final Logger _logger = Logger(
     printer: PrettyPrinter(
@@ -35,37 +41,46 @@ class GitsHttp implements Client {
   final GitsInspector? _gitsInspector;
   final bool _showLog;
   final Map<String, String>? _headers;
-  MapEntry<String, String>? _mapEntityToken;
+  final AuthTokenOption? _authTokenOption;
+  final RefreshTokenOption? _refreshTokenOption;
 
-  void setToken(
-    String token, {
-    String key = 'Authorization',
-    String prefixValue = 'Bearer',
-  }) {
-    _mapEntityToken = MapEntry(
-      key,
-      prefixValue.isNotEmpty ? '$prefixValue $token' : token,
-    );
-  }
-
-  Map<String, String>? _putIfAbsentHeader(
+  Future<Map<String, String>?> _putIfAbsentHeader(
+    Uri url,
     Map<String, String>? headers,
-  ) {
-    if (_mapEntityToken == null && _headers == null) {
+  ) async {
+    final mapEntityToken = await _authTokenOption?.getMapEntryToken(url);
+
+    if (mapEntityToken == null && _headers == null) {
       return headers;
     }
 
     final newHeaders = headers ?? {};
-    if (_mapEntityToken != null) {
-      newHeaders.putIfAbsent(
-        _mapEntityToken!.key,
-        () => _mapEntityToken!.value,
-      );
+    if (mapEntityToken != null) {
+      newHeaders.putIfAbsent(mapEntityToken.key, () => mapEntityToken.value);
     }
     _headers?.forEach((key, value) {
       newHeaders.putIfAbsent(key, () => value);
     });
     return newHeaders;
+  }
+
+  Object? _getBodyRequest(BaseRequest request, Object? body) {
+    if (request is MultipartRequest) {
+      final files = request.files
+          .map((e) => {
+                'filename': e.filename,
+                'mime_type': e.contentType.mimeType,
+                'field': e.field,
+                'length': e.length.toString(),
+              })
+          .toList();
+
+      return {
+        'files': files,
+        'body': request.fields,
+      };
+    }
+    return body;
   }
 
   void _loggerRequest(BaseRequest request, Object? body) {
@@ -75,7 +90,7 @@ class GitsHttp implements Client {
       '${request.method.toUpperCase()} ${request.url.toString()}',
     );
     if (request.headers.isNotEmpty) _logger.d(request.headers);
-    if (body != null) _logger.d(body);
+    if (body != null) _logger.d(_getBodyRequest(request, body));
   }
 
   void _loggerResponse(Response response) {
@@ -109,11 +124,17 @@ class GitsHttp implements Client {
   }
 
   Future<void> _inspectorResponse(String uuid, Response response) async {
+    Object? body;
+    try {
+      body = json.decode(response.body);
+    } catch (e) {
+      body = response.body;
+    }
     await _gitsInspector?.inspectorResponse(
       uuid,
       ResponseInspector(
         headers: response.headers,
-        body: json.decode(response.body),
+        body: body,
         status: response.statusCode,
         size: response.contentLength,
       ),
@@ -143,17 +164,14 @@ class GitsHttp implements Client {
     final response = await Response.fromStream(streamResponse);
     _loggerResponse(response);
     _inspectorResponse(uuid, response);
-    _handleErrorResponse(response);
     return response;
   }
 
-  Future<Response> _sendUnstreamed(
-      String method, Uri url, Map<String, String>? headers,
-      [body, Encoding? encoding]) async {
+  Request _getRequest(String method, Uri url, Map<String, String>? headers,
+      [body, Encoding? encoding]) {
     var request = Request(method, url);
 
-    final newHeaders = _putIfAbsentHeader(headers);
-    if (newHeaders != null) request.headers.addAll(newHeaders);
+    if (headers != null) request.headers.addAll(headers);
     if (encoding != null) request.encoding = encoding;
     if (body != null) {
       if (body is String) {
@@ -166,8 +184,51 @@ class GitsHttp implements Client {
         throw ArgumentError('Invalid request body "$body".');
       }
     }
+    return request;
+  }
 
-    return _fetch(request, body);
+  Future<Response> _sendUnstreamed(
+      String method, Uri url, Map<String, String>? headers,
+      [body, Encoding? encoding]) async {
+    final newHeaders = await _putIfAbsentHeader(url, headers);
+
+    final request = _getRequest(method, url, newHeaders, body, encoding);
+    Response response = await _fetch(request, body);
+
+    // do refresh token if condition is true
+    if (_refreshTokenOption?.condition(request, response) ?? false) {
+      response = await _doRefreshTokenThenRetry(request, response, body);
+    }
+
+    _handleErrorResponse(response);
+
+    await _authTokenOption?.handleConditionAuthTokenOption(request, response);
+    return response;
+  }
+
+  Future<Response> _doRefreshTokenThenRetry(
+      BaseRequest request, Response response, Object? body) async {
+    await _sendRefreshToken(_refreshTokenOption!);
+
+    final copyRequest = _copyRequest(request);
+    return _fetch(copyRequest, body);
+  }
+
+  Future<void> _sendRefreshToken(
+    RefreshTokenOption refreshTokenOption,
+  ) async {
+    final method = refreshTokenOption.method.toString();
+    final url = refreshTokenOption.url;
+    final headers = await refreshTokenOption.getHeaders?.call();
+    final body = await refreshTokenOption.getBody?.call();
+    final encoding = refreshTokenOption.encoding;
+
+    var request = _getRequest(method, url, headers, body, encoding);
+    final response = await _fetch(request, body);
+    _handleRefreshTokenErrorResponse(
+      response,
+    );
+    await refreshTokenOption.onResponse(response);
   }
 
   @override
@@ -219,61 +280,44 @@ class GitsHttp implements Client {
   }) =>
       _sendUnstreamed('DELETE', url, headers, body, encoding);
 
+  MultipartRequest _getMultiPartRequest(
+    Uri url, {
+    Map<String, File>? files,
+    Map<String, String>? headers,
+    Map<String, String>? body,
+  }) {
+    var request = MultipartRequest('POST', url);
+    files?.forEach((key, value) async {
+      request.files.add(await MultipartFile.fromPath(key, value.path));
+    });
+
+    if (!(headers?.containsKey('Content-type') ?? false)) {
+      request.headers.addAll({"Content-type": "multipart/form-data"});
+    }
+    if (headers != null) request.headers.addAll(headers);
+    if (body != null) request.fields.addAll(body);
+    return request;
+  }
+
   Future<Response> postMultipart(
     Uri url, {
     Map<String, File>? files,
     Map<String, String>? headers,
     Map<String, String>? body,
   }) async {
-    final newHeaders = _putIfAbsentHeader(headers);
-    var request = MultipartRequest('POST', url);
-    files?.forEach((key, value) async {
-      request.files.add(await MultipartFile.fromPath(key, value.path));
-    });
+    final newHeaders = await _putIfAbsentHeader(url, headers);
 
-    if (!(newHeaders?.containsKey('Content-type') ?? false)) {
-      request.headers.addAll({"Content-type": "multipart/form-data"});
+    final request = _getMultiPartRequest(url,
+        files: files, headers: newHeaders, body: body);
+    Response response = await _fetch(request, body);
+
+    // do refresh token if condition is true
+    if (_refreshTokenOption?.condition(request, response) ?? false) {
+      response = await _doRefreshTokenThenRetry(request, response, body);
     }
-    if (newHeaders != null) request.headers.addAll(newHeaders);
-    if (body != null) request.fields.addAll(body);
 
-    final uuid = const Uuid().v4();
-    _loggerRequest(request, _getBodyRequest(request));
-    await _inspectorRequest(uuid, request, _getBodyRequest(request));
-    final response = await Response.fromStream(
-      await send(request).timeout(
-        Duration(milliseconds: _timeout),
-        onTimeout: () async {
-          await _inspectorResponseTimeout(uuid);
-          throw gits_exception.TimeoutException();
-        },
-      ),
-    );
-    _loggerResponse(response);
-    _inspectorResponse(uuid, response);
     _handleErrorResponse(response);
     return response;
-  }
-
-  Object? _getBodyRequest(BaseRequest request) {
-    if (request is Request) {
-      return request.body;
-    } else if (request is MultipartRequest) {
-      final files = request.files
-          .map((e) => {
-                'filename': e.filename,
-                'mime_type': e.contentType.mimeType,
-                'field': e.field,
-                'length': e.length.toString(),
-              })
-          .toList();
-
-      return {
-        'files': files,
-        'body': request.fields,
-      };
-    }
-    return null;
   }
 
   @override
@@ -306,6 +350,32 @@ class GitsHttp implements Client {
     );
   }
 
+  BaseRequest _copyRequest(BaseRequest request) {
+    BaseRequest requestCopy;
+
+    if (request is Request) {
+      requestCopy = Request(request.method, request.url)
+        ..encoding = request.encoding
+        ..bodyBytes = request.bodyBytes;
+    } else if (request is MultipartRequest) {
+      requestCopy = MultipartRequest(request.method, request.url)
+        ..fields.addAll(request.fields)
+        ..files.addAll(request.files);
+    } else if (request is StreamedRequest) {
+      throw Exception('copying streamed requests is not supported');
+    } else {
+      throw Exception('request type is unknown, cannot copy');
+    }
+
+    requestCopy
+      ..persistentConnection = request.persistentConnection
+      ..followRedirects = request.followRedirects
+      ..maxRedirects = request.maxRedirects
+      ..headers.addAll(request.headers);
+
+    return requestCopy;
+  }
+
   void _handleErrorResponse(Response response) {
     if (response.statusCode >= 500) {
       throw gits_exception.ServerException(
@@ -324,6 +394,15 @@ class GitsHttp implements Client {
       );
     } else if (response.statusCode >= 300) {
       throw gits_exception.RedirectionException(
+        statusCode: response.statusCode,
+        jsonBody: response.body,
+      );
+    }
+  }
+
+  void _handleRefreshTokenErrorResponse(Response response) {
+    if (response.statusCode >= 300) {
+      throw gits_exception.RefreshTokenException(
         statusCode: response.statusCode,
         jsonBody: response.body,
       );
