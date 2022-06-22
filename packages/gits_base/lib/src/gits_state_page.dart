@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'gits_cubit.dart';
 
 mixin GitsStatePage<T extends StatefulWidget, C extends GitsCubit> on State<T> {
-  late C cubit;
+  late C cubit = setCubit();
 
   C setCubit();
   Widget buildWidget(BuildContext context);
@@ -12,7 +12,6 @@ mixin GitsStatePage<T extends StatefulWidget, C extends GitsCubit> on State<T> {
   @override
   void initState() {
     super.initState();
-    cubit = setCubit();
     cubit.initState(context);
     WidgetsBinding.instance.addPostFrameCallback(
       (_) => cubit.initAfterFirstLayout(context),
