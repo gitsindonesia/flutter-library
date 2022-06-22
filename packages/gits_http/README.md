@@ -6,11 +6,57 @@ Gits HTTP uses the [http](https://pub.dev/packages/http) library which has been 
 final locator = GetIt.instance;
 
 locator.registerLazySingleton(
-    () => GitsHttp(
-      timeout: 30000,
-      showLog: true,
-      gitsInspector: locator(), // this for activate GitsInspector
-      headers: {}, // you can add headers
+  () => GitsHttp(
+    timeout: 30000,
+    showLog: true,
+    gitsInspector: locator(),
+    authTokenOption: AuthTokenOption(
+      typeHeader: 'Authorization',
+      prefixHeader: 'Bearer',
+      getToken: () => locator<FlutterSecureStorage>().read(key: 'token'),
+      authCondition: (request, response) =>
+          request.url == GitsEndpoints.login,
+      onAuthTokenResponse: (response) async {
+        final map = jsonDecode(response.body);
+        await locator<FlutterSecureStorage>().write(
+          key: 'token',
+          value: map['token'],
+        );
+        await locator<FlutterSecureStorage>().write(
+          key: 'refresh_token',
+          value: map['refresh_token'],
+        );
+      },
+      clearCondition: (request, response) =>
+          request.url == GitsEndpoints.logout,
+      onClearToken: () =>
+          locator<FlutterSecureStorage>().delete(key: 'token'),
+      excludeEndpointUsageToken: [
+        GitsEndpoints.login,
+        GitsEndpoints.register,
+      ],
+    ),
+    refreshTokenOption: RefreshTokenOption(
+      method: RefreshTokenMethod.post,
+      url: GitsEndpoints.refreshToken,
+      condition: (request, response) =>
+          request.url != GitsEndpoints.login && response.statusCode == 401,
+      getBody: () async {
+        final refreshToken =
+            await locator<FlutterSecureStorage>().read(key: 'refresh_token');
+
+        return {
+          'refresh_token': refreshToken ?? '',
+        };
+      },
+      onResponse: (response) async {
+        // handle response refresh token
+        final map = jsonDecode(response.body);
+        locator<FlutterSecureStorage>().write(
+          key: 'token',
+          value: map['token'],
+        );
+      },
     ),
   );
 ```
@@ -28,18 +74,77 @@ locator.registerLazySingleton(
   );
 ```
 
-## Token
+## Auth Token
 
 To set the token, it is done after authorization and getting the token. the token is stored to local and setup on `GitsHttp`.
 
 ```dart
-final GitsHttp http = locator();
-final String token = getToken();
-...
-http.setToken(token, key: 'Authorization', prefixValue: 'Bearer');
+GitsHttp(
+  ...
+  authTokenOption:AuthTokenOption(
+    typeHeader: 'Authorization',
+    prefixHeader: 'Bearer',
+    getToken: () => locator<FlutterSecureStorage>().read(key: 'token'),
+    authCondition: (request, response) =>
+        request.url == GitsEndpoints.login,
+    onAuthTokenResponse: (response) async {
+      final map = jsonDecode(response.body);
+      await locator<FlutterSecureStorage>().write(
+        key: 'token',
+        value: map['token'],
+      );
+      await locator<FlutterSecureStorage>().write(
+        key: 'refresh_token',
+        value: map['refresh_token'],
+      );
+    },
+    clearCondition: (request, response) =>
+        request.url == GitsEndpoints.logout,
+    onClearToken: () =>
+        locator<FlutterSecureStorage>().delete(key: 'token'),
+    excludeEndpointUsageToken: [
+      GitsEndpoints.login,
+      GitsEndpoints.register,
+    ],
+  ),
+  ...
+);
 ```
 
 After we set the token, every API call will add an `Authorization` header with a default value of `Bearer $token`.
+
+## Refresh Token
+
+To set the token, it is done after authorization and getting the token. the token is stored to local and setup on `GitsHttp`.
+
+```dart
+GitsHttp(
+  ...
+  refreshTokenOption: RefreshTokenOption(
+    method: RefreshTokenMethod.post,
+    url: GitsEndpoints.refreshToken,
+    condition: (request, response) =>
+        request.url != GitsEndpoints.login && response.statusCode == 401,
+    getBody: () async {
+      final refreshToken =
+          await locator<FlutterSecureStorage>().read(key: 'refresh_token');
+
+      return {
+        'refresh_token': refreshToken ?? '',
+      };
+    },
+    onResponse: (response) async {
+      // handle response refresh token
+      final map = jsonDecode(response.body);
+      locator<FlutterSecureStorage>().write(
+        key: 'token',
+        value: map['token'],
+      );
+    },
+  ),
+  ...
+);
+```
 
 ## Get
 
