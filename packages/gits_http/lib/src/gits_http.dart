@@ -14,6 +14,7 @@ import 'package:uuid/uuid.dart';
 
 import 'errors/gits_exceptions.dart' as gits_exception;
 
+/// The base class for an HTTP client.
 class GitsHttp implements Client {
   GitsHttp({
     int timeout = 30000,
@@ -29,6 +30,7 @@ class GitsHttp implements Client {
         _authTokenOption = authTokenOption,
         _refreshTokenOption = refreshTokenOption;
 
+  /// Logger used for logging request and response http to console.
   final Logger _logger = Logger(
     printer: PrettyPrinter(
       errorMethodCount: 0,
@@ -37,13 +39,30 @@ class GitsHttp implements Client {
     ),
   );
 
+  /// The number of duration to timeout send http in milis.
   final int _timeout;
+
+  /// The feature [GitsInspector] for listener request and response http
+  /// like chuck in android.
+  ///
+  /// Show local notification each send http.
+  /// Can shake phone for open ui [GitsInspector]
   final GitsInspector? _gitsInspector;
+
+  /// Show logger send http request and response to console.
   final bool _showLog;
+
+  /// The default headers always to implement to each send http.
   final Map<String, String>? _headers;
+
+  /// Option to handle auth token.
   final AuthTokenOption? _authTokenOption;
+
+  /// Option to handle refresh token.
   final RefreshTokenOption? _refreshTokenOption;
 
+  /// Return new headers with given [url] and old [headers],
+  /// include set authorization.
   Future<Map<String, String>?> _putIfAbsentHeader(
     Uri url,
     Map<String, String>? headers,
@@ -64,6 +83,7 @@ class GitsHttp implements Client {
     return newHeaders;
   }
 
+  /// Return object body request for logger with given [request] and [body].
   Object? _getBodyRequest(BaseRequest request, Object? body) {
     if (request is MultipartRequest) {
       final files = request.files
@@ -83,6 +103,7 @@ class GitsHttp implements Client {
     return body;
   }
 
+  /// Show log [request] http to console.
   void _loggerRequest(BaseRequest request, Object? body) {
     if (kReleaseMode || !_showLog) return;
     _logger.d('----> Request');
@@ -93,6 +114,7 @@ class GitsHttp implements Client {
     if (body != null) _logger.d(_getBodyRequest(request, body));
   }
 
+  /// Show log [response] http to console.
   void _loggerResponse(Response response) {
     if (kReleaseMode || !_showLog) return;
     _logger.d('<---- Response ${response.statusCode}');
@@ -103,6 +125,7 @@ class GitsHttp implements Client {
     }
   }
 
+  /// Handle [request] http for [GitsInspector].
   Future<void> _inspectorRequest(
     String uuid,
     BaseRequest request,
@@ -123,6 +146,7 @@ class GitsHttp implements Client {
     );
   }
 
+  /// Handle [response] http for [GitsInspector].
   Future<void> _inspectorResponse(String uuid, Response response) async {
     Object? body;
     try {
@@ -141,6 +165,7 @@ class GitsHttp implements Client {
     );
   }
 
+  /// Handle timeout http for [GitsInspector].
   Future<void> _inspectorResponseTimeout(String uuid) async {
     await _gitsInspector?.inspectorResponseTimeout(uuid);
   }
@@ -150,6 +175,7 @@ class GitsHttp implements Client {
     return request.send();
   }
 
+  /// Sends a non-streaming [Request] and returns a non-streaming [Response].
   Future<Response> _fetch(BaseRequest request, Object? body) async {
     final uuid = const Uuid().v4();
     _loggerRequest(request, body);
@@ -167,6 +193,7 @@ class GitsHttp implements Client {
     return response;
   }
 
+  /// Return [Request] with given [method], [url], [headers], [body] and [encoding].
   Request _getRequest(String method, Uri url, Map<String, String>? headers,
       [body, Encoding? encoding]) {
     var request = Request(method, url);
@@ -187,6 +214,8 @@ class GitsHttp implements Client {
     return request;
   }
 
+  /// Sends a non-streaming [Request] and returns a non-streaming [Response],
+  /// include put new headers and handle refresh token.
   Future<Response> _sendUnstreamed(
       String method, Uri url, Map<String, String>? headers,
       [body, Encoding? encoding]) async {
@@ -206,6 +235,8 @@ class GitsHttp implements Client {
     return response;
   }
 
+  /// Do refresh token then if success retry the previous request
+  /// with given [reqeust], previous [response] and previous [body].
   Future<Response> _doRefreshTokenThenRetry(
       BaseRequest request, Response response, Object? body) async {
     await _sendRefreshToken(_refreshTokenOption!);
@@ -214,6 +245,7 @@ class GitsHttp implements Client {
     return _fetch(copyRequest, body);
   }
 
+  /// Sends a refresh token non-streaming [Request] and returns a non-streaming [Response],
   Future<void> _sendRefreshToken(
     RefreshTokenOption refreshTokenOption,
   ) async {
@@ -280,6 +312,7 @@ class GitsHttp implements Client {
   }) =>
       _sendUnstreamed('DELETE', url, headers, body, encoding);
 
+  /// Return [MultipartRequest] with given [url], [files], [headers], and [body].
   MultipartRequest _getMultiPartRequest(
     Uri url, {
     Map<String, File>? files,
@@ -299,6 +332,14 @@ class GitsHttp implements Client {
     return request;
   }
 
+  /// Sends an HTTP POST multipart request with the given headers, files and body to the given
+  /// URL.
+  ///
+  /// [files] sets the files of the multipart request. It a [Map<String, File>].
+  ///
+  /// [headers] sets the headers of the multipart request. It a [Map<String, String>].
+  ///
+  /// [body] sets the body of the multipart request. It a [Map<String, String>].
   Future<Response> postMultipart(
     Uri url, {
     Map<String, File>? files,
@@ -338,6 +379,7 @@ class GitsHttp implements Client {
     return response.bodyBytes;
   }
 
+  /// Throws an error if [response] is not successful.
   void _checkResponseSuccess(Uri url, Response response) {
     if (response.statusCode < 400) return;
     var message = 'Request to $url failed with status ${response.statusCode}';
@@ -350,6 +392,7 @@ class GitsHttp implements Client {
     );
   }
 
+  /// Returns a copy of [request].
   BaseRequest _copyRequest(BaseRequest request) {
     BaseRequest requestCopy;
 
@@ -376,6 +419,15 @@ class GitsHttp implements Client {
     return requestCopy;
   }
 
+  /// Throws a [GitsException] if [response] is not successfull.
+  ///
+  /// Throw a [ServerException] if status code >=500
+  ///
+  /// Throw a [UnauthorizedException] if status code is 401
+  ///
+  /// Throw a [ClientException] if status code 400 - 499
+  ///
+  /// Throw a [RedirectionException] if status code 300 - 399
   void _handleErrorResponse(Response response) {
     if (response.statusCode >= 500) {
       throw gits_exception.ServerException(
@@ -400,6 +452,7 @@ class GitsHttp implements Client {
     }
   }
 
+  /// Throws an [RefreshTokenException] if [response] is not successfull.
   void _handleRefreshTokenErrorResponse(Response response) {
     if (response.statusCode >= 300) {
       throw gits_exception.RefreshTokenException(
