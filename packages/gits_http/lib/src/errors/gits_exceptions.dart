@@ -2,10 +2,13 @@ import 'package:gits_http/src/errors/status_code_name.dart';
 
 import '../../gits_http.dart';
 
+/// The interface for Gits HTTP Exception.
 abstract class GitsException {
+  /// Convert to [GitsFailure].
   GitsFailure toGitsFailure();
 }
 
+/// An exception caused by an error status code 300-399.
 class RedirectionException implements GitsException, StatusCodeName {
   RedirectionException({
     required this.statusCode,
@@ -33,6 +36,7 @@ class RedirectionException implements GitsException, StatusCodeName {
       'RedirectionException with status code $statusCode or ${toStatusCodeName()}';
 }
 
+/// An exception caused by an error status code 400-499.
 class ClientException implements GitsException, StatusCodeName {
   ClientException({
     required this.statusCode,
@@ -60,6 +64,7 @@ class ClientException implements GitsException, StatusCodeName {
       'ClientException with status code $statusCode or ${toStatusCodeName()}';
 }
 
+/// An exception caused by an error status code 500-599.
 class ServerException implements GitsException, StatusCodeName {
   ServerException({
     required this.statusCode,
@@ -87,6 +92,7 @@ class ServerException implements GitsException, StatusCodeName {
       'ServerException with status code $statusCode or ${toStatusCodeName()}';
 }
 
+/// An exception caused by an error status code 401.
 class UnauthorizedException implements GitsException, StatusCodeName {
   UnauthorizedException({
     required this.statusCode,
@@ -113,6 +119,7 @@ class UnauthorizedException implements GitsException, StatusCodeName {
   String toStatusCodeName() => 'Unauthorized';
 }
 
+/// An exception caused by an error timeout fetch http client.
 class TimeoutException implements GitsException {
   @override
   GitsFailure toGitsFailure() {
@@ -124,6 +131,7 @@ class TimeoutException implements GitsException {
       'TimeoutException timeout request and receive response api';
 }
 
+/// An exception caused by an error in internal app.
 class InternalException implements GitsException {
   @override
   GitsFailure toGitsFailure() {
@@ -134,6 +142,7 @@ class InternalException implements GitsException {
   String toString() => 'InternalException something error with internal code';
 }
 
+/// An exception caused by an error status code 300-599 in do refresh token.
 class RefreshTokenException implements GitsException, StatusCodeName {
   RefreshTokenException({
     required this.statusCode,
