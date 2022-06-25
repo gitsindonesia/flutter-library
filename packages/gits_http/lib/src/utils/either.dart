@@ -1,10 +1,13 @@
-abstract class Either<S, F> {
+/// Interface for [Either] data value in [Left] or [Right]
+abstract class Either<L, R> {
+  /// Function to call function if in [Left] and if in [Right]
   B fold<B>(
-    B Function(S success) ifSuccess,
-    B Function(F failure) ifFailure,
+    B Function(L left) ifLeft,
+    B Function(R right) ifRight,
   );
 }
 
+/// Class value [Either] if in [Left]
 class Left<L, R> extends Either<L, R> {
   Left(this._l);
 
@@ -12,16 +15,17 @@ class Left<L, R> extends Either<L, R> {
   L get value => _l;
   @override
   B fold<B>(
-    B Function(L l) ifSuccess,
-    B Function(R r) ifFailure,
+    B Function(L l) ifLeft,
+    B Function(R r) ifRight,
   ) =>
-      ifSuccess(_l);
+      ifLeft(_l);
   @override
   bool operator ==(other) => other is Left && other._l == _l;
   @override
   int get hashCode => _l.hashCode;
 }
 
+/// Class value [Either] if in [Right]
 class Right<L, R> extends Either<L, R> {
   Right(this._r);
 
@@ -29,10 +33,10 @@ class Right<L, R> extends Either<L, R> {
   R get value => _r;
   @override
   B fold<B>(
-    B Function(L l) ifSuccess,
-    B Function(R r) ifFailure,
+    B Function(L l) ifLeft,
+    B Function(R r) ifRight,
   ) =>
-      ifFailure(_r);
+      ifRight(_r);
   @override
   bool operator ==(other) => other is Right && other._r == _r;
   @override

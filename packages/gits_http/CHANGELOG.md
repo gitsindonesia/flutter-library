@@ -1,3 +1,8 @@
+## 0.2.1
+
+- add dartdoc
+- add example
+
 ## 0.2.0
 
 - add auth token option

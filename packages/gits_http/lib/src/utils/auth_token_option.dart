@@ -1,11 +1,21 @@
 import 'package:http/http.dart';
 
+/// Function async for get token can take from local data or static token
 typedef GetToken = Future<String?> Function();
+
+/// Callback auth token response trigger condition from [authCondition]
 typedef OnAuthTokenResponse = Future<void> Function(Response response);
+
+/// Auth token condition return [bool] from condition [BaseRequest] or [Response]
 typedef AuthCondition = bool Function(BaseRequest request, Response response);
+
+/// Clear token condition return [bool] from condition [BaseRequest] or [Response]
 typedef ClearCondition = bool Function(BaseRequest request, Response response);
+
+/// Callback clear token response trigger condition from [clearCondition]
 typedef OnClearToken = Future<void> Function();
 
+/// [AuthTokenOption] handle token authorization
 class AuthTokenOption {
   AuthTokenOption({
     this.typeHeader = 'Authorization',
@@ -18,17 +28,37 @@ class AuthTokenOption {
     this.excludeEndpointUsageToken,
   });
 
+  /// Type header for auth default value 'Authorization'
   final String typeHeader;
+
+  /// Prefix header for auth default value 'Bearer'
   final String prefixHeader;
+
+  /// Function async to get token
   final GetToken getToken;
+
+  /// Condition for trigger [OnAuthTokenResponse]
   final AuthCondition authCondition;
+
+  /// Callbak from [authCondition] is true
   final OnAuthTokenResponse onAuthTokenResponse;
+
+  /// Condition for trigger [OnClearToken]
   final ClearCondition? clearCondition;
+
+  /// Callbak from [OnClearToken] is true
   final OnClearToken? onClearToken;
+
+  /// Exclude endpoint to usage authorization
   final List<Uri>? excludeEndpointUsageToken;
 }
 
+/// Extension for handling advantage [AuthTokenOption]
 extension AuthTokenOptionExtension on AuthTokenOption {
+  /// Get map entry token return [MapEntry]
+  ///
+  /// if [url] containts in [excludeEndpointUsageToken] then return null
+  ///
   Future<MapEntry?> getMapEntryToken(Uri url) async {
     if (excludeEndpointUsageToken?.contains(url) ?? true) {
       return null;
@@ -41,6 +71,11 @@ extension AuthTokenOptionExtension on AuthTokenOption {
     );
   }
 
+  /// Hanlde condition from auth token option
+  ///
+  /// if [authCondition] is true then call [onAuthTokenResponse]
+  /// if [clearCondition] is true then call [onClearToken]
+  ///
   Future<void> handleConditionAuthTokenOption(
     BaseRequest request,
     Response response,

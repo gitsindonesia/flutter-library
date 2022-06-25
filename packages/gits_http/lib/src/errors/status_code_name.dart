@@ -1,7 +1,10 @@
+/// The interface for [GitsException] where handle status code.
 abstract class StatusCodeName {
+  /// Convert status code to name.
   String toStatusCodeName();
 }
 
+/// Change [statusCode] to status name.
 String statusCodeNameByStatusCode(int statusCode) {
   switch (statusCode) {
     case 300:

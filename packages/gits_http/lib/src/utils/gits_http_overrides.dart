@@ -1,5 +1,8 @@
 import 'dart:io';
 
+/// Override http client for bad certificate callback force to true
+///
+/// this methode is not secure for your apps
 class GitsHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
