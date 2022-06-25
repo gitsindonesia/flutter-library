@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+/// Data class for request inspector will used to save to local storage.
 class RequestInspector {
   RequestInspector({
     required this.url,
@@ -10,13 +11,25 @@ class RequestInspector {
     this.dateTime,
   });
 
+  /// The url http.
   final Uri url;
+
+  /// The method request send http.
   final String method;
+
+  /// The headers request send http.
   final Map<dynamic, dynamic>? headers;
+
+  /// The body request send http.
   final Object? body;
+
+  /// The number size request http.
   final int? size;
+
+  /// The date time when instance created.
   final DateTime? dateTime;
 
+  /// Return to Map<String, dynamic> from [RequestInspector] data class.
   Map<String, dynamic> toMap() {
     return {
       'url': url.toString(),
@@ -29,6 +42,7 @@ class RequestInspector {
     };
   }
 
+  /// Return to [RequestInspector] from  Map<String, dynamic>.
   factory RequestInspector.fromMap(Map<String, dynamic> map) {
     return RequestInspector(
       url: Uri.parse(map['url']),
@@ -48,8 +62,10 @@ class RequestInspector {
     );
   }
 
+  /// Return string json from [toMap].
   String toJson() => json.encode(toMap());
 
+  /// Return [RequestInspector] from json string with given [source].
   factory RequestInspector.fromJson(String source) =>
       RequestInspector.fromMap(json.decode(source));
 }

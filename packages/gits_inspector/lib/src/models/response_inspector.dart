@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+/// Data class for response inspector will used to save to local storage.
 class ResponseInspector {
   ResponseInspector({
     this.status,
@@ -10,13 +11,25 @@ class ResponseInspector {
     this.isTimeout,
   });
 
+  /// Status code response
   final int? status;
+
+  /// The headers response send http.
   final Map<dynamic, dynamic>? headers;
+
+  /// The body response send http.
   final Object? body;
+
+  /// The number size response http.
   final int? size;
+
+  /// The date time when instance created.
   final DateTime? dateTime;
+
+  /// Flag instance is timeout.
   final bool? isTimeout;
 
+  /// Return to Map<String, dynamic> from [ResponseInspector] data class.
   Map<String, dynamic> toMap() {
     return {
       'status': status,
@@ -29,6 +42,7 @@ class ResponseInspector {
     };
   }
 
+  /// Return to [ResponseInspector] from  Map<String, dynamic>.
   factory ResponseInspector.fromMap(Map<String, dynamic> map) {
     return ResponseInspector(
       status: map['status']?.toInt(),
@@ -48,8 +62,10 @@ class ResponseInspector {
     );
   }
 
+  /// Return string json from [toMap].
   String toJson() => json.encode(toMap());
 
+  /// Return [ResponseInspector] from json string with given [source].
   factory ResponseInspector.fromJson(String source) =>
       ResponseInspector.fromMap(json.decode(source));
 }
