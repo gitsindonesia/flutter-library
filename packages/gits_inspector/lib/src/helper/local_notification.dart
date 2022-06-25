@@ -1,9 +1,14 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+/// Instance class for local notification functionality.
 class LocalNotification {
+  /// Wrap the package [FlutterLocalNotificationsPlugin].
   late FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 
+  /// Specifies the icon for notifications.
   final String notificationIcon;
+
+  /// Function for handle if notification selected.
   final Function(String?) onSelectedNotification;
 
   LocalNotification({
@@ -13,6 +18,7 @@ class LocalNotification {
     _initializeNotificationsPlugin();
   }
 
+  /// Initialize provides cross-platform functionality for displaying local notifications.
   void _initializeNotificationsPlugin() {
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     final initializationSettingsAndroid =
@@ -30,6 +36,7 @@ class LocalNotification {
     );
   }
 
+  /// Function for show local notification with given [message]
   Future<void> showLocalNotification(String message) async {
     const channelId = 'Gits Inspector';
     const channelName = 'Gits Inspector';
