@@ -4,6 +4,7 @@ import 'package:gits_inspector/src/models/inspector.dart';
 import 'package:gits_inspector/src/widgets/body_inspector.dart';
 import 'package:gits_inspector/src/widgets/text_item_inspector.dart';
 
+/// Show request section with given [inspector].
 class RequestSection extends StatelessWidget {
   const RequestSection({
     Key? key,

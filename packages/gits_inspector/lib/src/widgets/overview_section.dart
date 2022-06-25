@@ -4,6 +4,7 @@ import 'package:gits_inspector/src/extensions/inspector_extensions.dart';
 import 'package:gits_inspector/src/models/inspector.dart';
 import 'package:gits_inspector/src/widgets/text_item_inspector.dart';
 
+/// Show overview section with given [inspector].
 class OverviewSection extends StatelessWidget {
   const OverviewSection({
     Key? key,

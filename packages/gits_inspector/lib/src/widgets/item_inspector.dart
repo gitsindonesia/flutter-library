@@ -5,6 +5,7 @@ import 'package:gits_inspector/src/extensions/date_time_extensions.dart';
 import 'package:gits_inspector/src/extensions/inspector_extensions.dart';
 import 'package:gits_inspector/src/models/inspector.dart';
 
+/// Item inspector widget for show [ListTile] with given [item].
 class ItemInspector extends StatelessWidget {
   const ItemInspector({
     Key? key,

@@ -4,6 +4,7 @@ import 'package:gits_inspector/src/models/inspector.dart';
 import 'package:gits_inspector/src/widgets/body_inspector.dart';
 import 'package:gits_inspector/src/widgets/text_item_inspector.dart';
 
+/// Show response section with given [inspector].
 class ResponseSection extends StatelessWidget {
   const ResponseSection({
     Key? key,
