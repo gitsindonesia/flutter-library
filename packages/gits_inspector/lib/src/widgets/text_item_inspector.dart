@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Show text item with given [title] and [value].
 class TextItemInspector extends StatelessWidget {
   const TextItemInspector({
     Key? key,

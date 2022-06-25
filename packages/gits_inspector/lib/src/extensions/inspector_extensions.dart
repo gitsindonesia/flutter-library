@@ -3,13 +3,24 @@ import 'package:gits_inspector/gits_inspector.dart';
 import 'package:gits_inspector/src/extensions/date_time_extensions.dart';
 import 'package:gits_inspector/src/helper/pretty_json_helper.dart';
 
+/// The number for divider byte to kilo byte
 const int kilobyteAsByte = 1000;
+
+/// The number for divider byte to mega byte
 const int megabyteAsByte = 1000000;
+
+/// The number for divider second to millisecond
 const int secondAsMillisecond = 1000;
+
+/// The number for divider minute to millisecond
 const int minuteAsMillisecond = 60000;
 
+/// Extension for [Inspector]
 extension InspectorExtension on Inspector {
+  /// Return string fixed decimal 2 with given [value]
   String _formatDouble(double value) => value.toStringAsFixed(2);
+
+  /// Return string calculate size with given [bytes]
   String _calculateSize(int bytes) {
     if (bytes < 0) {
       return "-1 B";
@@ -24,6 +35,7 @@ extension InspectorExtension on Inspector {
     return "${_formatDouble(bytes / megabyteAsByte)} MB";
   }
 
+  /// Return path with query from [url]
   String get pathWithQuery {
     final method = request.method;
     final path = request.url.path;
@@ -31,8 +43,10 @@ extension InspectorExtension on Inspector {
     return '$method $path${query.isNotEmpty ? '?$query' : ''}';
   }
 
+  /// Return boolean for checking [url] is secure SSL
   bool get isSSL => request.url.scheme == 'https';
 
+  /// Return string total size from [request] and [response]
   String get totalSize {
     int size = -1;
     if (request.size != null || response?.size != null) {
@@ -41,9 +55,13 @@ extension InspectorExtension on Inspector {
     return _calculateSize(size);
   }
 
+  /// Return string size of [request]
   String get requestSize => _calculateSize(request.size ?? -1);
+
+  /// Return string size of [response]
   String get responseSize => _calculateSize(response?.size ?? -1);
 
+  /// Return string duration from [request] time to [response] time
   String get duration {
     final timeInMillis = response?.dateTime != null
         ? response?.dateTime?.difference(createdAt).inMilliseconds ?? 0
@@ -65,6 +83,13 @@ extension InspectorExtension on Inspector {
         "${duration.inMilliseconds.remainder(1000)} ms";
   }
 
+  /// Return [Color] from [statusCode]
+  ///
+  /// Return Colors.grey if status code in range 100 - 199
+  /// Return Colors.grey[200] if status code in range 200 - 299
+  /// Return Colors.blue[200] if status code in range 300 - 399
+  /// Return Colors.orange[200] if status code in range 400 - 499
+  /// Return Colors.red[200] for other status code
   Color? get colorStatus {
     final statusCode = response?.status ?? 0;
     if (statusCode >= 100 && statusCode < 200) {
@@ -79,6 +104,7 @@ extension InspectorExtension on Inspector {
     return Colors.red[200];
   }
 
+  /// Return string status name from status [response]
   String get status {
     if (response == null) return 'Incomplite';
     if (response?.isTimeout ?? false) return 'Timeout';
@@ -197,6 +223,7 @@ extension InspectorExtension on Inspector {
     }
   }
 
+  /// Return string message for share
   String toMessageShare() {
     StringBuffer sb = StringBuffer('Gits Inspector\n\n');
     sb.writeln('Overview');

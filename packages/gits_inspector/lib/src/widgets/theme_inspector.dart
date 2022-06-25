@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Default theme inspector with dark mode.
 class ThemeInspector extends StatelessWidget {
   const ThemeInspector({
     Key? key,

@@ -5,6 +5,7 @@ import 'package:gits_inspector/src/cubit/gits_inspector_cubit.dart';
 import 'package:gits_inspector/src/widgets/item_inspector.dart';
 import 'package:gits_inspector/src/widgets/theme_inspector.dart';
 
+/// The page will display list gits inspector http.
 class GitsInspectorPage extends StatefulWidget {
   const GitsInspectorPage({Key? key}) : super(key: key);
 

@@ -7,7 +7,9 @@ import 'package:gits_inspector/src/widgets/response_section.dart';
 import 'package:gits_inspector/src/widgets/theme_inspector.dart';
 import 'package:share_plus/share_plus.dart';
 
+/// The page will display detail gits inspector.
 class GitsInspectorDetailPage extends StatelessWidget {
+  /// Constructor of [GitsInspectorDetailPage] with required [inspector].
   const GitsInspectorDetailPage({
     Key? key,
     required this.inspector,
@@ -15,6 +17,7 @@ class GitsInspectorDetailPage extends StatelessWidget {
 
   final Inspector inspector;
 
+  /// Function to navigate [GitsInspectorDetailPage] with given [context] and [inspector].
   static void navigate(BuildContext context, Inspector inspector) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
