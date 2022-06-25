@@ -7,16 +7,28 @@ import 'package:gits_inspector/src/helper/shake_detector.dart';
 import 'package:gits_inspector/src/pages/gits_inspector_page.dart';
 
 class GitsInspector {
+  /// Should inspector be opened on device shake (works only with physical
+  /// with sensors).
   final bool showInspectorOnShake;
+
+  /// Should user be notified with notification if there's new request catched.
   final bool showNotification;
+
+  /// Should save new request to local storage. if this false GitsInspector
+  /// cannot show notification and cannot open with shake device.
   final bool saveInspectorToLocal;
+
+  /// Icon url for notification
   final String notificationIcon;
 
+  ///Flag used to check inspector is opened/dispose
   bool _inspectorOpened = false;
+
   ShakeDetector? _shakeDetector;
   LocalNotification? _localNotification;
   NavigatorState? _navigatorState;
 
+  /// Creates GitsInspector instance.
   GitsInspector({
     this.showInspectorOnShake = true,
     this.showNotification = true,
@@ -36,9 +48,12 @@ class GitsInspector {
     }
   }
 
+  /// Set custom navigation state. This will help if there's route library.
   void setNavigatorState(NavigatorState navigatorState) =>
       _navigatorState = navigatorState;
 
+  /// Opens Http calls inspector. This will navigate user to the new fullscreen
+  /// page where all listened http calls can be viewed.
   void navigateToInspectorPage() async {
     if (_inspectorOpened) return;
     if (_navigatorState == null) {
@@ -58,12 +73,14 @@ class GitsInspector {
     _inspectorOpened = false;
   }
 
+  /// Insert [Inspector] to local then show local notification for request http
   Future<void> inspectorRequest(Inspector inspector) async {
     if (!saveInspectorToLocal) return;
     await InspectorService.insert(inspector);
     await showLocalNotification();
   }
 
+  /// Insert [Inspector] to local then show local notification for response http
   Future<void> inspectorResponse(
     String uuid,
     ResponseInspector response,
@@ -73,6 +90,7 @@ class GitsInspector {
     await showLocalNotification();
   }
 
+  /// Insert [Inspector] to local then show local notification for timeout http
   Future<void> inspectorResponseTimeout(String uuid) async {
     if (!saveInspectorToLocal) return;
     await InspectorService.updateResponse(
@@ -80,6 +98,7 @@ class GitsInspector {
     await showLocalNotification();
   }
 
+  /// Show local notification
   Future<void> showLocalNotification() async {
     if (!showNotification || !saveInspectorToLocal) return;
     final inspectors = await InspectorService.getAll(limit: 7);
@@ -95,6 +114,7 @@ class GitsInspector {
     _localNotification?.showLocalNotification(message);
   }
 
+  /// Close instance, after call onClose shake detector cannot be open GitsInspectorPage.
   void onClose() {
     _shakeDetector?.stopListening();
   }
