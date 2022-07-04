@@ -1,4 +1,4 @@
-extension DoubleExtension on double {
+extension GEDoubleExtension on double {
   /// Return double this plus with [value].
   double plus(double value) => this + value;
 
