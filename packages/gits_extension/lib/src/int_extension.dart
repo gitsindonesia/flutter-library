@@ -1,4 +1,4 @@
-extension IntExtension on int {
+extension GEIntExtension on int {
   /// Return int this plus with [value].
   int plus(int value) => this + value;
 

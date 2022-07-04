@@ -1,4 +1,4 @@
-extension ScopeFunctionsExtension<T> on T {
+extension GEScopeFunctionsExtension<T> on T {
   /// Calls the specified function [block] with [it] value as its receiver and returns its result.
   void run(void Function(T it) block) => block(this);
 

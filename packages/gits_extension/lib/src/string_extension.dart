@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-extension StringExtension on String {
+extension GEStringExtension on String {
   /// Checks whether the `String` is a valid mail.
   bool get isEmail => RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}').hasMatch(this);
 
@@ -142,7 +142,7 @@ extension StringExtension on String {
   String get urlDecode => Uri.decodeFull(this);
 }
 
-extension StringNullExtension on String? {
+extension GEStringNullExtension on String? {
   /// Returns `true` if the string is either `null` or empty.
   bool get isNullOrEmpty => this?.isEmpty ?? true;
 

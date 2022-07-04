@@ -1,4 +1,4 @@
-extension IterableNumExtension<T extends num> on Iterable<T> {
+extension GEIterableNumExtension<T extends num> on Iterable<T> {
   /// Returns the sum of all elements in the collection.
   T sum() {
     num sum = 0.0;
