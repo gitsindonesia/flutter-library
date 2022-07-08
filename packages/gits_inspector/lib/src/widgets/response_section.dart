@@ -32,12 +32,7 @@ class ResponseSection extends StatelessWidget {
       },
     );
 
-    String body = '';
-    if (inspector.response?.body is Map) {
-      body = prettyJson(inspector.response?.body);
-    } else {
-      body = inspector.response?.body?.toString() ?? '';
-    }
+    String body = prettyJson(inspector.response?.body);
 
     if (inspector.response?.isTimeout ?? false) {
       return const Center(

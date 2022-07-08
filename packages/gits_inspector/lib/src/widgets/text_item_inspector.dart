@@ -18,14 +18,14 @@ class TextItemInspector extends StatelessWidget {
       children: [
         Expanded(
           flex: 3,
-          child: Text(
+          child: SelectableText(
             title,
             style: const TextStyle(fontWeight: FontWeight.w600),
           ),
         ),
         Expanded(
           flex: 7,
-          child: Text(value),
+          child: SelectableText(value),
         ),
       ],
     );

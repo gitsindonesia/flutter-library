@@ -1,3 +1,12 @@
+## 1.0.0
+
+- remove dependency gits_base & flutter_bloc
+- update depedency sqflite, sensors_plus, flutter_local_notifications & share_plus
+- remove cubit gits_inspector
+- fix pretty json
+- add empty state for request section
+- change to selectabletext for item & body inspector
+
 ## 0.1.2
 
 - add dartdoc

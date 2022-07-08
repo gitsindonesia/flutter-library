@@ -32,16 +32,17 @@ class RequestSection extends StatelessWidget {
       },
     );
 
-    String body = '';
-    if (inspector.request.body is Map) {
-      body = prettyJson(inspector.request.body);
-    } else {
-      body = inspector.request.body?.toString() ?? '';
-    }
+    String body = prettyJson(inspector.request.body);
 
     String queryParameters = '';
     if (inspector.request.url.queryParameters.isNotEmpty) {
       queryParameters = prettyJson(inspector.request.url.queryParameters);
+    }
+
+    if (headers.isEmpty && body.isEmpty && queryParameters.isEmpty) {
+      return const Center(
+        child: Text('Request is empty'),
+      );
     }
 
     return ListView(

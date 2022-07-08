@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gits_http/gits_http.dart';
-import 'package:gits_inspector/gits_inspector.dart';
 
 final inspector = GitsInspector(
   notificationIcon: '@mipmap/ic_launcher',

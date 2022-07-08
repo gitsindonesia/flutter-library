@@ -226,7 +226,7 @@ extension InspectorExtension on Inspector {
   /// Return string message for share
   String toMessageShare() {
     StringBuffer sb = StringBuffer('Gits Inspector\n\n');
-    sb.writeln('Overview');
+    sb.writeln('========= Overview =========');
     sb.writeln('URL: ${Uri.decodeFull(request.url.toString())}');
     sb.writeln('Method: ${request.method}');
     sb.writeln('Status: $status');
@@ -240,33 +240,28 @@ extension InspectorExtension on Inspector {
     sb.writeln('Response Size: $responseSize');
     sb.writeln('Total Size: $totalSize');
     sb.write('\n');
-    sb.writeln('Request');
+
+    sb.writeln('========= Request =========');
     request.headers?.forEach(
       (key, value) {
         sb.writeln('$key: $value');
       },
     );
-    if (request.body is Map) {
-      sb.writeln('Body: ${prettyJson(request.body)}');
-    } else {
-      sb.writeln('Body: ${request.body?.toString() ?? '-'}');
-    }
+    sb.writeln('Body: ${prettyJson(request.body, '-')}');
     if (request.url.queryParameters.isNotEmpty) {
       sb.writeln(
-          'Query Parameters: ${prettyJson(request.url.queryParameters)}');
+          'Query Parameters: ${prettyJson(request.url.queryParameters, '-')}');
     }
     sb.write('\n');
-    sb.writeln('Response');
+
+    sb.writeln('========= Response =========');
     response?.headers?.forEach(
       (key, value) {
         sb.writeln('$key: $value');
       },
     );
-    if (response?.body is Map) {
-      sb.writeln('Body: ${prettyJson(response?.body)}');
-    } else {
-      sb.writeln('Body: ${response?.body?.toString() ?? '-'}');
-    }
+    sb.writeln('Body: ${prettyJson(response?.body, '-')}');
+
     return sb.toString();
   }
 }
