@@ -1,3 +1,9 @@
+## 0.3.0
+
+- update dependency gits_inspector
+- export gits_inspector
+- fix request body with nested map
+
 ## 0.2.1
 
 - add dartdoc

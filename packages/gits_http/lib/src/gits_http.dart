@@ -206,7 +206,11 @@ class GitsHttp implements Client {
       } else if (body is List) {
         request.bodyBytes = body.cast<int>();
       } else if (body is Map) {
-        request.bodyFields = body.cast<String, String>();
+        try {
+          request.bodyFields = body.cast<String, String>();
+        } catch (e) {
+          request.body = json.encode(body);
+        }
       } else {
         throw ArgumentError('Invalid request body "$body".');
       }
@@ -324,8 +328,11 @@ class GitsHttp implements Client {
       request.files.add(await MultipartFile.fromPath(key, value.path));
     });
 
-    if (!(headers?.containsKey('Content-type') ?? false)) {
-      request.headers.addAll({"Content-type": "multipart/form-data"});
+    if (!(headers != null &&
+        headers.containsKey(HttpHeaders.contentTypeHeader))) {
+      request.headers.addAll({
+        HttpHeaders.contentTypeHeader: "multipart/form-data",
+      });
     }
     if (headers != null) request.headers.addAll(headers);
     if (body != null) request.fields.addAll(body);
