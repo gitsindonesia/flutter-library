@@ -1,7 +1,7 @@
 library gits_http;
 
 export 'package:http/http.dart' show Response;
-export 'package:gits_inspector/gits_inspector.dart';
+export 'package:gits_inspector/gits_inspector.dart' show GitsInspector;
 
 export 'package:gits_http/src/gits_http.dart';
 export 'package:gits_http/src/errors/gits_exceptions.dart';

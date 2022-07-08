@@ -1,3 +1,7 @@
+## 0.3.1
+
+- fix export gits_inspector just show GitsInspector class
+
 ## 0.3.0
 
 - update dependency gits_inspector
