@@ -16,12 +16,12 @@ class BodyInspector extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        SelectableText(
           title,
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 8),
-        Text(value),
+        SelectableText(value),
       ],
     );
   }

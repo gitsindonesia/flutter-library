@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gits_inspector/src/cubit/gits_inspector_cubit.dart';
 import 'package:gits_inspector/src/extensions/date_time_extensions.dart';
 import 'package:gits_inspector/src/extensions/inspector_extensions.dart';
 import 'package:gits_inspector/src/models/inspector.dart';
@@ -10,15 +8,16 @@ class ItemInspector extends StatelessWidget {
   const ItemInspector({
     Key? key,
     required this.item,
+    required this.onItemPressed,
   }) : super(key: key);
 
   final Inspector item;
+  final ValueChanged<Inspector> onItemPressed;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () =>
-          context.read<GitsInspectorCubit>().navigateToDetail(context, item),
+      onTap: () => onItemPressed(item),
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 16,
         vertical: 8,

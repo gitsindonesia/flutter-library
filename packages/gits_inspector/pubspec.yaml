@@ -1,6 +1,6 @@
 name: gits_inspector
 description: A simple in-app for GitsHttp inspector. Intercepts and persists all HTTP requests and responses inside your application, and provides a UI for inspecting their content.
-version: 0.1.2
+version: 1.0.0
 homepage: https://gits.id/
 repository: https://github.com/gitsindonesia/flutter-library/tree/main/packages/gits_inspector
 
@@ -13,14 +13,11 @@ dependencies:
     sdk: flutter
 
   intl: ^0.17.0
-  sqflite: ^2.0.2+1
-  sensors_plus: ^1.3.1
-  flutter_local_notifications: ^9.5.3+1
-  share_plus: ^4.0.4
+  sqflite: ^2.0.3
+  sensors_plus: ^1.3.2
+  flutter_local_notifications: ^9.6.1
+  share_plus: ^4.0.10
   equatable: ^2.0.3
-  flutter_bloc: ^8.0.1
-
-  gits_base: ^0.1.2
 
 dev_dependencies:
   flutter_test:
