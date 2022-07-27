@@ -1,3 +1,9 @@
+## 0.3.2
+
+- remove abstract class status_code_name.dart
+- refactor gits exceptions include status_code_name
+- refactor gits failure include statusCode and jsonBody
+
 ## 0.3.1
 
 - fix export gits_inspector just show GitsInspector class
