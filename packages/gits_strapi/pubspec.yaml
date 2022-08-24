@@ -1,0 +1,23 @@
+name: gits_strapi
+description: this library is used to facilitate integration with strapi.
+version: 0.0.1
+homepage: null
+
+publish_to: "none"
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  gits_http: ^0.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.1
+
+flutter:
