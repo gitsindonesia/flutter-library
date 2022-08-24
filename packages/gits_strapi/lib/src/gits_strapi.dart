@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:gits_http/gits_http.dart';
 import 'package:gits_strapi/gits_strapi.dart';
-import 'package:gits_strapi/src/model/response/auth_response.dart';
 
 class GitsStrapi {
   late GitsHttp http;
@@ -23,7 +22,7 @@ class GitsStrapi {
         refreshTokenOption: refreshTokenOption);
   }
 
-  Future<SingleResponse<DataResponse>> getSingle(
+  Future<SingleResponse<DataResponse<dynamic>>> getSingle(
       {Map<String, String>? headers, required Uri endpoint}) async {
     try {
       final raw = await http.get(endpoint, headers: headers);
@@ -39,7 +38,7 @@ class GitsStrapi {
     }
   }
 
-  Future<CollectionResponse<DataResponse>> getCollection(
+  Future<CollectionResponse<DataResponse<dynamic>>> getCollection(
       {Map<String, String>? headers, required Uri endpoint}) async {
     try {
       final raw = await http.get(endpoint, headers: headers);

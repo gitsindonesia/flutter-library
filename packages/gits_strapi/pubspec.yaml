@@ -1,6 +1,6 @@
 name: gits_strapi
 description: this library is used to facilitate integration with strapi.
-version: 0.0.1
+version: 1.0.0
 homepage: null
 
 publish_to: "none"
