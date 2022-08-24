@@ -1,6 +1,4 @@
 import 'package:gits_strapi/gits_strapi.dart';
-import 'package:gits_strapi/src/model/response/auth_response.dart';
-import 'package:gits_strapi/src/model/response/body_response/src/user_response.dart';
 
 extension SingleResponseMapper on SingleResponse {
   SingleEntity<T> toEntity<T extends Object>(Function(dynamic) build) =>
@@ -52,4 +50,48 @@ extension UserResponseMapper on UserResponse {
       blocked: blocked,
       createdAt: createdAt,
       updatedAt: updatedAt);
+}
+
+extension ThumbnailResponseMapper on ThumbnailResponse {
+  ThumbnailEntity toEntity() => ThumbnailEntity(
+        name: name,
+        hash: hash,
+        ext: ext,
+        mime: mime,
+        path: path,
+        width: width,
+        height: height,
+        size: size,
+        url: url,
+      );
+}
+
+extension FormatsResponseMapper on FormatsResponse {
+  FormatsEntity toEntity() => FormatsEntity(
+        thumbnail: thumbnail?.toEntity(),
+        large: large?.toEntity(),
+        medium: medium?.toEntity(),
+        small: small?.toEntity(),
+      );
+}
+
+extension ImageResponseMapper on ImageResponse {
+  ImageEntity toEntity() => ImageEntity(
+        name: name,
+        alternativeText: alternativeText,
+        caption: caption,
+        width: width,
+        height: height,
+        formats: formats?.toEntity(),
+        hash: hash,
+        ext: ext,
+        mime: mime,
+        size: size,
+        url: url,
+        previewUrl: previewUrl,
+        provider: provider,
+        providerMetadata: providerMetadata,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+      );
 }
