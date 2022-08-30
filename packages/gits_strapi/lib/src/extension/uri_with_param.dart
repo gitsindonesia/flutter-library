@@ -28,8 +28,8 @@ extension GitsStrapiUriExtension on Uri {
     }
 
     if (param.fields != null) {
-      for (var i = 0; i < param.sort!.length; i++) {
-        parameters['fields[${i.toString()}]'] = param.sort![i];
+      for (var i = 0; i < param.fields!.length; i++) {
+        parameters['fields[${i.toString()}]'] = param.fields![i];
       }
     }
 
