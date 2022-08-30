@@ -60,13 +60,28 @@ class GitsStrapi {
     }
   }
 
+  Future<Response> select({
+    Map<String, String>? headers,
+    required Uri endpoint,
+  }) async {
+    try {
+      return await http.get(endpoint, headers: headers);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<Response> update(
       {Map<String, String>? headers,
       required Uri endpoint,
       required String id,
       required Map<String, dynamic> body}) async {
-    var newPath = "${endpoint.origin}${endpoint.path}/$id";
-    return await http.put(Uri.parse(newPath), body: body, headers: headers);
+    try {
+      var newPath = "${endpoint.origin}${endpoint.path}/$id";
+      return await http.put(Uri.parse(newPath), body: body, headers: headers);
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Future<Response> delete(

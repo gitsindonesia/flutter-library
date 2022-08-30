@@ -110,6 +110,14 @@ Used to retrieve data based on a list of objects, if necessary retrieve single o
     });
 ```
 
+### (Get) Select
+
+Used for `GET` method requirements
+
+```dart
+Response select = await strapi.select(endpoint: Uri.parse("endpoint"));
+```
+
 ### (POST) Create
 
 Used for `POST` method requirements
