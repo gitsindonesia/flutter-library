@@ -82,6 +82,9 @@ Future<void> main() async {
     );
     log("CollectionEntity : $collectionEntity");
 
+    Response select = await strapi.select(endpoint: Uri.parse("endpoint"));
+    log("SelectResponse : ${select.body}");
+
     var insertBody = {
       "data": {
         "name": "test",

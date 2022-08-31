@@ -1,6 +1,6 @@
 name: gits_strapi
-description: this library is used to facilitate integration with strapi.
-version: 1.0.0
+description: this library is used to facilitate integration with Strapi there are several main functions such as GET collection, single, and CRUD besides that we also provide several helpers to make it easier to use.
+version: 1.0.1
 homepage: https://gits.id/
 repository: https://github.com/gitsindonesia/flutter-library/tree/main/packages/gits_strapi
 
