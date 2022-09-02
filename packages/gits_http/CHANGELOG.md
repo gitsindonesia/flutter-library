@@ -1,3 +1,9 @@
+## 0.3.3
+
+- update package http to 0.13.5
+- update package equatable to 2.0.5
+- update package gits_inspector to 1.0.1
+
 ## 0.3.2
 
 - remove abstract class status_code_name.dart
