@@ -1,3 +1,7 @@
+## 1.0.0
+
+- update package flutter stoage to 6.0.0
+
 ## 0.1.2
 
 - add dartdoc
