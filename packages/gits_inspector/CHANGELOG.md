@@ -1,3 +1,11 @@
+## 1.0.1
+
+- update package sqflite to 2.0.3+1
+- update package sensors_plus to 1.3.4+1
+- update package flutter_local_notifications to 9.9.0
+- update package share_plus to 4.0.10+1
+- remove package equatable
+
 ## 1.0.0
 
 - remove dependency gits_base & flutter_bloc

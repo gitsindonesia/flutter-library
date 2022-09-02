@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  gits_http: ^0.3.2
+  gits_http: ^0.3.3
 
 dev_dependencies:
   flutter_test:
