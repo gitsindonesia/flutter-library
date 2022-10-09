@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 /// Interface for [Either] data value in [Left] or [Right]
 abstract class Either<L, R> {
   /// Function to call function if in [Left] and if in [Right]
@@ -20,7 +22,16 @@ class Left<L, R> extends Either<L, R> {
   ) =>
       ifLeft(_l);
   @override
-  bool operator ==(other) => other is Left && other._l == _l;
+  bool operator ==(other) {
+    if (other is Left) {
+      final otherList = other._l;
+      if (otherList is List) {
+        return listEquals(otherList, _l is List ? _l as List : [_l]);
+      }
+    }
+    return other is Left && other._l == _l;
+  }
+
   @override
   int get hashCode => _l.hashCode;
 }
@@ -38,7 +49,16 @@ class Right<L, R> extends Either<L, R> {
   ) =>
       ifRight(_r);
   @override
-  bool operator ==(other) => other is Right && other._r == _r;
+  bool operator ==(other) {
+    if (other is Right) {
+      final otherList = other._r;
+      if (otherList is List) {
+        return listEquals(otherList, _r is List ? _r as List : [_r]);
+      }
+    }
+    return other is Right && other._r == _r;
+  }
+
   @override
   int get hashCode => _r.hashCode;
 }
