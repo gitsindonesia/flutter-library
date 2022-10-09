@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 abstract class GitsCubit<T> extends Cubit<T> {
   GitsCubit(T initialState) : super(initialState);
 
+  bool mounted = true;
+
   /// Called when this object is inserted into the tree.
   void initState(BuildContext context) {}
 
@@ -59,6 +61,7 @@ abstract class GitsCubit<T> extends Cubit<T> {
   @override
   Future<void> close() {
     dispose();
+    mounted = false;
     return super.close();
   }
 }

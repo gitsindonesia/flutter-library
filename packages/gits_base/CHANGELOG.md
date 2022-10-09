@@ -1,6 +1,10 @@
+## 1.1.0
+
+- add variable mounted in gits cubit
+
 ## 1.0.0
 
-- update package flutter stoage to 6.0.0
+- update package flutter storage to 6.0.0
 
 ## 0.1.2
 
