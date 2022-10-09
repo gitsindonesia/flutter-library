@@ -1,3 +1,7 @@
+## 0.3.4
+
+- fix equality either for support type List
+
 ## 0.3.3
 
 - update package http to 0.13.5
