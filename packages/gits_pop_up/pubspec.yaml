@@ -1,7 +1,7 @@
 name: gits_pop_up
-description: A new Flutter package project.
+description: GistPopUp is Flutter pop-up library with Gits UI Style.
 version: 0.0.1
-homepage:
+homepage: https://gits.id/
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
