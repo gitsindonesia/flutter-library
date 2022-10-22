@@ -1,3 +1,8 @@
+## 1.0.0
+
+- update package gits_inspector to 2.0.0
+- fix auth token option to exclude url
+
 ## 0.3.4
 
 - fix equality either for support type List

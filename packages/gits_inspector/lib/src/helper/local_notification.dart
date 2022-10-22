@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 /// Instance class for local notification functionality.
@@ -9,7 +11,7 @@ class LocalNotification {
   final String notificationIcon;
 
   /// Function for handle if notification selected.
-  final Function(String?) onSelectedNotification;
+  final Function(NotificationResponse) onSelectedNotification;
 
   LocalNotification({
     required this.notificationIcon,
@@ -19,21 +21,44 @@ class LocalNotification {
   }
 
   /// Initialize provides cross-platform functionality for displaying local notifications.
-  void _initializeNotificationsPlugin() {
+  void _initializeNotificationsPlugin() async {
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    await _requestPermissions();
+
     final initializationSettingsAndroid =
         AndroidInitializationSettings(notificationIcon);
-    const initializationSettingsIOS = IOSInitializationSettings();
+    const DarwinInitializationSettings initializationSettingsDarwin =
+        DarwinInitializationSettings();
 
     final initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
+      iOS: initializationSettingsDarwin,
     );
 
     _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onSelectNotification: onSelectedNotification,
+      onDidReceiveNotificationResponse: onSelectedNotification,
     );
+  }
+
+  Future<void> _requestPermissions() async {
+    if (Platform.isIOS) {
+      await _flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+            critical: false,
+          );
+    } else if (Platform.isAndroid) {
+      await _flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.requestPermission();
+    }
   }
 
   /// Function for show local notification with given [message]
@@ -49,11 +74,15 @@ class LocalNotification {
       playSound: false,
       styleInformation: BigTextStyleInformation(message),
     );
-    const iOSPlatformChannelSpecifics =
-        IOSNotificationDetails(presentSound: false);
+    const darwinPlatformChannelSpecifics = DarwinNotificationDetails(
+      presentSound: false,
+      presentAlert: false,
+      presentBadge: false,
+    );
+
     final platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
-      iOS: iOSPlatformChannelSpecifics,
+      iOS: darwinPlatformChannelSpecifics,
     );
     await _flutterLocalNotificationsPlugin.show(
       0,
