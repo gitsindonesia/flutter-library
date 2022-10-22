@@ -1,3 +1,7 @@
+## 1.2.0
+
+- add init argument from gits state page to gits cubit
+
 ## 1.1.0
 
 - add variable mounted in gits cubit

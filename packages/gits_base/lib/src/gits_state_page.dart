@@ -48,7 +48,10 @@ mixin GitsStatePage<T extends StatefulWidget, C extends GitsCubit> on State<T> {
     super.initState();
     cubit.initState(context);
     WidgetsBinding.instance.endOfFrame.then((_) {
-      if (mounted) cubit.initAfterFirstLayout(context);
+      if (mounted) {
+        cubit.initAfterFirstLayout(context);
+        cubit.initArgument<T>(widget);
+      }
     });
   }
 
