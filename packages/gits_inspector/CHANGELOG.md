@@ -1,3 +1,10 @@
+## 2.0.0
+
+- update package sqflite: ^2.1.0+1
+- update package sensors_plus: ^2.0.1
+- update package flutter_local_notifications: ^12.0.2
+- share_plus: ^6.0.1
+
 ## 1.0.1
 
 - update package sqflite to 2.0.3+1
