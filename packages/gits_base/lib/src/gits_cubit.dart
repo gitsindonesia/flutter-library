@@ -24,7 +24,44 @@ abstract class GitsCubit<T> extends Cubit<T> {
   /// configuration, the framework will update this property to refer to the new
   /// widget and then call [didUpdateWidget], passing the old configuration as
   /// an argument.
-  void initArgument<W>(W widget) {}
+  void initArgument<Page>(BuildContext context, Page widget) {}
+
+  /// Called when a dependency of this [State] object changes.
+  ///
+  /// For example, if the previous call to [build] referenced an
+  /// [InheritedWidget] that later changed, the framework would call this
+  /// method to notify this object about the change.
+  ///
+  /// This method is also called immediately after [initState]. It is safe to
+  /// call [BuildContext.dependOnInheritedWidgetOfExactType] from this method.
+  ///
+  /// Subclasses rarely override this method because the framework always
+  /// calls [build] after a dependency changes. Some subclasses do override
+  /// this method because they need to do some expensive work (e.g., network
+  /// fetches) when their dependencies change, and that work would be too
+  /// expensive to do for every build.
+  void didChangeDependencies(BuildContext context) {}
+
+  /// Called whenever the widget configuration changes.
+  ///
+  /// If the parent widget rebuilds and request that this location in the tree
+  /// update to display a new widget with the same [runtimeType] and
+  /// [Widget.key], the framework will update the [widget] property of this
+  /// [State] object to refer to the new widget and then call this method
+  /// with the previous widget as an argument.
+  ///
+  /// Override this method to respond when the [widget] changes (e.g., to start
+  /// implicit animations).
+  ///
+  /// The framework always calls [build] after calling [didUpdateWidget], which
+  /// means any calls to [setState] in [didUpdateWidget] are redundant.
+  ///
+  /// {@macro flutter.widgets.State.initState}
+  ///
+  /// Implementations of this method should start with a call to the inherited
+  /// method, as in `super.didUpdateWidget(oldWidget)`.
+  void didUpdateWidget<Page>(
+      BuildContext context, Page oldWidget, Page widget) {}
 
   /// Called when a [GitsStatePage] is build with [MultiBlocProvider].
   ///

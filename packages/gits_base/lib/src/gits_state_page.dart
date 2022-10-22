@@ -50,9 +50,21 @@ mixin GitsStatePage<T extends StatefulWidget, C extends GitsCubit> on State<T> {
     WidgetsBinding.instance.endOfFrame.then((_) {
       if (mounted) {
         cubit.initAfterFirstLayout(context);
-        cubit.initArgument<T>(widget);
+        cubit.initArgument<T>(context, widget);
       }
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    cubit.didChangeDependencies(context);
+  }
+
+  @override
+  void didUpdateWidget(covariant oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    cubit.didUpdateWidget<T>(context, oldWidget, widget);
   }
 
   /// Close cubit for clear memory.
