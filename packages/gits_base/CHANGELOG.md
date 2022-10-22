@@ -1,3 +1,9 @@
+## 1.3.0
+
+- fix method argument gits cubit
+- add method for gits cubit didChangeDependencies
+- add method for gits cubit didUpdateWidget
+
 ## 1.2.0
 
 - add init argument from gits state page to gits cubit
