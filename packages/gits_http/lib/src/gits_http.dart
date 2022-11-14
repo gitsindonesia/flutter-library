@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:gits_http/src/utils/auth_token_option.dart';
+import 'package:gits_http/src/utils/middleware_response_option.dart';
 import 'package:gits_http/src/utils/refresh_token_option.dart';
 import 'package:gits_inspector/gits_inspector.dart'
     show GitsInspector, Inspector, RequestInspector, ResponseInspector;
@@ -22,12 +23,14 @@ class GitsHttp implements Client {
     Map<String, String>? headers,
     AuthTokenOption? authTokenOption,
     RefreshTokenOption? refreshTokenOption,
+    MiddlewareResponseOption? middlewareResponseOption,
   })  : _timeout = timeout,
         _gitsInspector = gitsInspector,
         _showLog = showLog,
         _headers = headers,
         _authTokenOption = authTokenOption,
-        _refreshTokenOption = refreshTokenOption;
+        _refreshTokenOption = refreshTokenOption,
+        _middlewareResponseOption = middlewareResponseOption;
 
   /// Logger used for logging request and response http to console.
   final Logger _logger = Logger(
@@ -59,6 +62,9 @@ class GitsHttp implements Client {
 
   /// Option to handle refresh token.
   final RefreshTokenOption? _refreshTokenOption;
+
+  /// Option to handle middleware response.
+  final MiddlewareResponseOption? _middlewareResponseOption;
 
   /// Return new headers with given [url] and old [headers],
   /// include set authorization.
@@ -222,20 +228,30 @@ class GitsHttp implements Client {
   Future<Response> _sendUnstreamed(
       String method, Uri url, Map<String, String>? headers,
       [body, Encoding? encoding]) async {
-    final newHeaders = await _putIfAbsentHeader(url, headers);
+    try {
+      final newHeaders = await _putIfAbsentHeader(url, headers);
 
-    final request = _getRequest(method, url, newHeaders, body, encoding);
-    Response response = await _fetch(request, body);
+      final request = _getRequest(method, url, newHeaders, body, encoding);
+      Response response = await _fetch(request, body);
 
-    // do refresh token if condition is true
-    if (_refreshTokenOption?.condition(request, response) ?? false) {
-      response = await _doRefreshTokenThenRetry(request, response, body);
+      // do refresh token if condition is true
+      if (_refreshTokenOption?.condition(request, response) ?? false) {
+        response = await _doRefreshTokenThenRetry(request, response, body);
+      }
+
+      if (_middlewareResponseOption?.condition(request, response) ?? false) {
+        _middlewareResponseOption?.onResponse(response);
+      }
+
+      _handleErrorResponse(response);
+
+      await _authTokenOption?.handleConditionAuthTokenOption(request, response);
+      return response;
+    } on SocketException {
+      throw gits_exception.NoInternetException();
+    } catch (e) {
+      rethrow;
     }
-
-    _handleErrorResponse(response);
-
-    await _authTokenOption?.handleConditionAuthTokenOption(request, response);
-    return response;
   }
 
   /// Do refresh token then if success retry the previous request
@@ -352,19 +368,29 @@ class GitsHttp implements Client {
     Map<String, String>? headers,
     Map<String, String>? body,
   }) async {
-    final newHeaders = await _putIfAbsentHeader(url, headers);
+    try {
+      final newHeaders = await _putIfAbsentHeader(url, headers);
 
-    final request = _getMultiPartRequest(url,
-        files: files, headers: newHeaders, body: body);
-    Response response = await _fetch(request, body);
+      final request = _getMultiPartRequest(url,
+          files: files, headers: newHeaders, body: body);
+      Response response = await _fetch(request, body);
 
-    // do refresh token if condition is true
-    if (_refreshTokenOption?.condition(request, response) ?? false) {
-      response = await _doRefreshTokenThenRetry(request, response, body);
+      // do refresh token if condition is true
+      if (_refreshTokenOption?.condition(request, response) ?? false) {
+        response = await _doRefreshTokenThenRetry(request, response, body);
+      }
+
+      if (_middlewareResponseOption?.condition(request, response) ?? false) {
+        _middlewareResponseOption?.onResponse(response);
+      }
+
+      _handleErrorResponse(response);
+      return response;
+    } on SocketException {
+      throw gits_exception.NoInternetException();
+    } catch (e) {
+      rethrow;
     }
-
-    _handleErrorResponse(response);
-    return response;
   }
 
   @override

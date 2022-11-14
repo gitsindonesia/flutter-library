@@ -247,3 +247,14 @@ class RefreshTokenException extends GitsException {
   String toString() =>
       'RefreshTokenException with status code $statusCode or ${toStatusCodeName()}';
 }
+
+/// An exception caused by an error no internet connection.
+class NoInternetException extends GitsException {
+  @override
+  GitsFailure toGitsFailure() {
+    return NoInternetFailure(toString());
+  }
+
+  @override
+  String toString() => 'No internet connection';
+}

@@ -1,3 +1,8 @@
+## 1.1.0
+
+- add exception for no internet connection
+- add middle response option
+
 ## 1.0.0
 
 - update package gits_inspector to 2.0.0
