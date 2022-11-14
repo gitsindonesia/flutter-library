@@ -89,3 +89,11 @@ class RefreshTokenFailure extends GitsFailure {
   @override
   List<Object?> get props => [message, statusCode, jsonBody];
 }
+
+/// A failure caused by an error no internet connection.
+class NoInternetFailure extends GitsFailure {
+  const NoInternetFailure(super.message);
+
+  @override
+  List<Object?> get props => [message];
+}
