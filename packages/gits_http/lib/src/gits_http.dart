@@ -240,7 +240,7 @@ class GitsHttp implements Client {
       }
 
       if (_middlewareResponseOption?.condition(request, response) ?? false) {
-        _middlewareResponseOption?.onResponse(response);
+        await _middlewareResponseOption?.onResponse(response);
       }
 
       _handleErrorResponse(response);
@@ -381,7 +381,7 @@ class GitsHttp implements Client {
       }
 
       if (_middlewareResponseOption?.condition(request, response) ?? false) {
-        _middlewareResponseOption?.onResponse(response);
+        await _middlewareResponseOption?.onResponse(response);
       }
 
       _handleErrorResponse(response);
