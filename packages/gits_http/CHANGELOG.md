@@ -1,3 +1,7 @@
+## 1.1.1
+
+- export middleware response option
+
 ## 1.1.0
 
 - add exception for no internet connection
