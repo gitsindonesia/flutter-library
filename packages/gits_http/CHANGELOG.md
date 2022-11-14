@@ -1,3 +1,7 @@
+## 1.1.2
+
+- add await call middleware response
+
 ## 1.1.1
 
 - export middleware response option
