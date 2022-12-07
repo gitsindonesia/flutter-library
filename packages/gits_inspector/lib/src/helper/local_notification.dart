@@ -11,7 +11,7 @@ class LocalNotification {
   final String notificationIcon;
 
   /// Function for handle if notification selected.
-  final Function(NotificationResponse) onSelectedNotification;
+  final void Function(NotificationResponse) onSelectedNotification;
 
   LocalNotification({
     required this.notificationIcon,
@@ -42,6 +42,7 @@ class LocalNotification {
     );
   }
 
+  /// It requests permission from the user to display notifications
   Future<void> _requestPermissions() async {
     if (Platform.isIOS) {
       await _flutterLocalNotificationsPlugin
@@ -85,10 +86,11 @@ class LocalNotification {
       iOS: darwinPlatformChannelSpecifics,
     );
     await _flutterLocalNotificationsPlugin.show(
-      0,
+      'gits_inspector'.hashCode,
       'Gits Inspector',
       message,
       platformChannelSpecifics,
+      payload: 'gits_inspector',
     );
   }
 }
