@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gits_inspector/gits_inspector.dart';
 import 'package:gits_inspector/src/extensions/date_time_extensions.dart';
 import 'package:gits_inspector/src/helper/local_notification.dart';
@@ -38,7 +39,8 @@ class GitsInspector {
     if (showNotification && saveInspectorToLocal) {
       _localNotification = LocalNotification(
         notificationIcon: notificationIcon,
-        onSelectedNotification: (payload) => navigateToInspectorPage(),
+        onSelectedNotification: (notificationResponse) =>
+            onSelectedNotification(notificationResponse),
       );
     }
     if (showInspectorOnShake && saveInspectorToLocal) {
@@ -112,6 +114,25 @@ class GitsInspector {
     }
     message += '. . .';
     _localNotification?.showLocalNotification(message);
+  }
+
+  /// If the notification payload is 'gits_inspector', navigate to the inspector page, otherwise, call
+  /// the otherSelectedNotification function
+  ///
+  /// Args:
+  ///   notificationResponse (NotificationResponse): The notification response object.
+  ///   otherSelectedNotification (void Function(NotificationResponse notificationResponse)?): This is a
+  /// callback function that you can use to handle other notifications.
+  void onSelectedNotification(
+    NotificationResponse notificationResponse, {
+    void Function(NotificationResponse notificationResponse)?
+        otherSelectedNotification,
+  }) {
+    if (notificationResponse.payload == 'gits_inspector') {
+      navigateToInspectorPage();
+    } else {
+      otherSelectedNotification?.call(notificationResponse);
+    }
   }
 
   /// Close instance, after call onClose shake detector cannot be open GitsInspectorPage.

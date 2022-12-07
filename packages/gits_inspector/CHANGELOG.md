@@ -1,3 +1,7 @@
+## 2.0.1
+
+- fix payload local notification with 'gits_inspector'
+
 ## 2.0.0
 
 - update package sqflite: ^2.1.0+1
