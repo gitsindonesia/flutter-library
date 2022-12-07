@@ -1,3 +1,7 @@
+## 1.1.3
+
+- update dependency gits_inspector to 2.0.1
+
 ## 1.1.2
 
 - add await call middleware response
