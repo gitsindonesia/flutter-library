@@ -12,6 +12,9 @@ mixin GitsStatePage<T extends StatefulWidget, C extends GitsCubit> on State<T> {
   /// Set the cubit must be set in declare mixin [GitsStatePage]
   C setCubit();
 
+  /// close cubit on dispose state.
+  bool get closeCubitOnDispose => true;
+
   /// Describes the part of the user interface represented by this widget,
   /// replace [build] for create interface.
   ///
@@ -70,7 +73,7 @@ mixin GitsStatePage<T extends StatefulWidget, C extends GitsCubit> on State<T> {
   /// Close cubit for clear memory.
   @override
   void dispose() {
-    cubit.close();
+    if (closeCubitOnDispose) cubit.close();
     super.dispose();
   }
 
