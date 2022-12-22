@@ -1,3 +1,7 @@
+## 1.4.0
+
+- add variable bool closeCubitOnDispose on GitsStatePage
+
 ## 1.3.0
 
 - fix method argument gits cubit
