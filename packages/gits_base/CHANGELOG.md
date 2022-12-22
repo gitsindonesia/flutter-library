@@ -1,3 +1,7 @@
+## 1.4.1
+
+- change create blocprovider for cubit to blocprovider.value to manualy close cubit
+
 ## 1.4.0
 
 - add variable bool closeCubitOnDispose on GitsStatePage

@@ -46,6 +46,7 @@ mixin GitsStatePage<T extends StatefulWidget, C extends GitsCubit> on State<T> {
   Widget buildWidget(BuildContext context);
 
   /// Call [initState] for cubit and call [initAfterFirstLayout] after frame completed.
+  @mustCallSuper
   @override
   void initState() {
     super.initState();
@@ -58,12 +59,14 @@ mixin GitsStatePage<T extends StatefulWidget, C extends GitsCubit> on State<T> {
     });
   }
 
+  @mustCallSuper
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     cubit.didChangeDependencies(context);
   }
 
+  @mustCallSuper
   @override
   void didUpdateWidget(covariant oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -71,6 +74,7 @@ mixin GitsStatePage<T extends StatefulWidget, C extends GitsCubit> on State<T> {
   }
 
   /// Close cubit for clear memory.
+  @mustCallSuper
   @override
   void dispose() {
     if (closeCubitOnDispose) cubit.close();
@@ -85,7 +89,7 @@ mixin GitsStatePage<T extends StatefulWidget, C extends GitsCubit> on State<T> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => cubit),
+        BlocProvider<C>.value(value: cubit),
         ...cubit.blocProviders(context),
       ],
       child: Builder(
