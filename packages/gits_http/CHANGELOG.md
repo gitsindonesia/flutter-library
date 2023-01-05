@@ -1,3 +1,16 @@
+## 2.0.0-dev.3
+
+- fix fromMap for headers Map in cache wrapper
+
+## 2.0.0-dev.2
+
+- fix simply key for write to storage
+- fix cache wrapper add status_code in toMap
+
+## 2.0.0-dev.1
+
+- fix hive init
+
 ## 2.0.0-dev
 
 - add cache strategy (AsyncOrCacheStrategy, CacheOrAsyncStrategy, JustAsyncStrategy, JustCacheStrategy), default JustAsyncStrategy

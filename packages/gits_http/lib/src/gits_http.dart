@@ -241,8 +241,7 @@ class GitsHttp {
 
       final request = _getRequest(method, url, newHeaders, body, encoding);
       final response = await cacheStrategy.applyStrategy(
-        key:
-            '$method-${url.toString()}-${headers.toString()}-${body.toString()}',
+        key: '$method-${url.path}',
         storage: _storage,
         fetch: () async {
           Response response = await _fetch(request, body);

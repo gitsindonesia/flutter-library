@@ -16,6 +16,7 @@ class CacheWrapper {
       'cacheDate': cacheDate,
       'response': {
         'body': response.body,
+        'status_code': response.statusCode,
         'headers': response.headers,
         'is_redirect': response.isRedirect,
         'persistent_connection': response.persistentConnection,
@@ -32,15 +33,15 @@ class CacheWrapper {
     return CacheWrapper(
       cacheDate: map['cacheDate']?.toInt() ?? 0,
       response: Response(
-        map['response']?['body'] ?? '',
-        map['response']?['status_code'] ?? '',
-        headers: map['response']?['headers'],
-        isRedirect: map['response']?['is_redirect'],
-        persistentConnection: map['response']?['persistent_connection'],
-        reasonPhrase: map['response']?['reason_phrase'],
+        map['response']['body'] ?? '',
+        map['response']['status_code'] ?? 400,
+        headers: Map<String, String>.from(map['response']['headers'] ?? {}),
+        isRedirect: map['response']['is_redirect'],
+        persistentConnection: map['response']['persistent_connection'],
+        reasonPhrase: map['response']['reason_phrase'],
         request: Request(
-          map['response']?['request']?['method'] ?? '',
-          Uri.parse(map['response']?['request']?['url'] ?? ''),
+          map['response']['request']['method'] ?? '',
+          Uri.parse(map['response']['request']['url'] ?? ''),
         ),
       ),
     );
