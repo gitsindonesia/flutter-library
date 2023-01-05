@@ -1,5 +1,6 @@
 library gits_http;
 
+export 'package:gits_http/src/cache_strategy/cache_strategy.dart';
 export 'package:gits_http/src/errors/gits_exceptions.dart';
 export 'package:gits_http/src/errors/gits_failures.dart';
 export 'package:gits_http/src/gits_http.dart';

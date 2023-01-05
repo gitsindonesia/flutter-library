@@ -1,6 +1,6 @@
 name: gits_http
 description: Future-based library for making HTTP requests modified from http package.
-version: 1.1.3
+version: 2.0.0-dev
 homepage: https://gits.id/
 repository: https://github.com/gitsindonesia/flutter-library/tree/main/packages/gits_http
 
@@ -13,9 +13,10 @@ dependencies:
     sdk: flutter
 
   http: ^0.13.5
-  uuid: ^3.0.6
+  uuid: ^3.0.7
   equatable: ^2.0.5
   logger: ^1.1.0
+  hive: ^2.2.3
 
   gits_inspector: ^2.0.1
 

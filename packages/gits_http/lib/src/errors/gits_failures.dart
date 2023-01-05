@@ -97,3 +97,11 @@ class NoInternetFailure extends GitsFailure {
   @override
   List<Object?> get props => [message];
 }
+
+/// A failure caused by an error no found data in cache.
+class CacheFailure extends GitsFailure {
+  const CacheFailure(super.message);
+
+  @override
+  List<Object?> get props => [message];
+}

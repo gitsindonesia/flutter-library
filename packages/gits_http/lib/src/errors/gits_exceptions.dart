@@ -258,3 +258,14 @@ class NoInternetException extends GitsException {
   @override
   String toString() => 'No internet connection';
 }
+
+/// An exception caused by an error no found data in cache.
+class CacheException extends GitsException {
+  @override
+  GitsFailure toGitsFailure() {
+    return CacheFailure(toString());
+  }
+
+  @override
+  String toString() => 'No found data in cache';
+}
