@@ -12,10 +12,11 @@ import 'package:http/http.dart';
 import 'package:logger/logger.dart';
 import 'package:uuid/uuid.dart';
 
+import 'cache_strategy/cache_strategy.dart';
 import 'errors/gits_exceptions.dart' as gits_exception;
 
 /// The base class for an HTTP client.
-class GitsHttp implements Client {
+class GitsHttp {
   GitsHttp({
     int timeout = 30000,
     GitsInspector? gitsInspector,
@@ -30,7 +31,8 @@ class GitsHttp implements Client {
         _headers = headers,
         _authTokenOption = authTokenOption,
         _refreshTokenOption = refreshTokenOption,
-        _middlewareResponseOption = middlewareResponseOption;
+        _middlewareResponseOption = middlewareResponseOption,
+        _storage = CacheStorage();
 
   /// Logger used for logging request and response http to console.
   final Logger _logger = Logger(
@@ -65,6 +67,8 @@ class GitsHttp implements Client {
 
   /// Option to handle middleware response.
   final MiddlewareResponseOption? _middlewareResponseOption;
+
+  final Storage _storage;
 
   /// Return new headers with given [url] and old [headers],
   /// include set authorization.
@@ -175,7 +179,6 @@ class GitsHttp implements Client {
     await _gitsInspector?.inspectorResponseTimeout(uuid);
   }
 
-  @override
   Future<StreamedResponse> send(BaseRequest request) {
     return request.send();
   }
@@ -226,22 +229,36 @@ class GitsHttp implements Client {
   /// Sends a non-streaming [Request] and returns a non-streaming [Response],
   /// include put new headers and handle refresh token.
   Future<Response> _sendUnstreamed(
-      String method, Uri url, Map<String, String>? headers,
-      [body, Encoding? encoding]) async {
+    String method,
+    Uri url,
+    Map<String, String>? headers,
+    CacheStrategy cacheStrategy, {
+    Object? body,
+    Encoding? encoding,
+  }) async {
     try {
       final newHeaders = await _putIfAbsentHeader(url, headers);
 
       final request = _getRequest(method, url, newHeaders, body, encoding);
-      Response response = await _fetch(request, body);
+      final response = await cacheStrategy.applyStrategy(
+        key: '$method-${url.path}',
+        storage: _storage,
+        fetch: () async {
+          Response response = await _fetch(request, body);
 
-      // do refresh token if condition is true
-      if (_refreshTokenOption?.condition(request, response) ?? false) {
-        response = await _doRefreshTokenThenRetry(request, response, body);
-      }
+          // do refresh token if condition is true
+          if (_refreshTokenOption?.condition(request, response) ?? false) {
+            response = await _doRefreshTokenThenRetry(request, response, body);
+          }
 
-      if (_middlewareResponseOption?.condition(request, response) ?? false) {
-        await _middlewareResponseOption?.onResponse(response);
-      }
+          if (_middlewareResponseOption?.condition(request, response) ??
+              false) {
+            await _middlewareResponseOption?.onResponse(response);
+          }
+
+          return response;
+        },
+      );
 
       _handleErrorResponse(response);
 
@@ -282,54 +299,87 @@ class GitsHttp implements Client {
     await refreshTokenOption.onResponse(response);
   }
 
-  @override
   Future<Response> get(
     Uri url, {
     Map<String, String>? headers,
     Map<String, dynamic>? body,
+    CacheStrategy? cacheStrategy,
   }) async {
     Map<String, String>? queryParameters = body?.map(
       (key, value) => MapEntry(key, value.toString()),
     );
     final urlWithBody = url.replace(queryParameters: queryParameters);
-    return _sendUnstreamed('GET', urlWithBody, headers);
+    return _sendUnstreamed(
+      'GET',
+      urlWithBody,
+      headers,
+      cacheStrategy ?? JustAsyncStrategy(),
+    );
   }
 
-  @override
   Future<Response> post(
     Uri url, {
     Map<String, String>? headers,
     Object? body,
     Encoding? encoding,
+    CacheStrategy? cacheStrategy,
   }) =>
-      _sendUnstreamed('POST', url, headers, body, encoding);
+      _sendUnstreamed(
+        'POST',
+        url,
+        headers,
+        cacheStrategy ?? JustAsyncStrategy(),
+        body: body,
+        encoding: encoding,
+      );
 
-  @override
   Future<Response> put(
     Uri url, {
     Map<String, String>? headers,
     Object? body,
     Encoding? encoding,
+    CacheStrategy? cacheStrategy,
   }) =>
-      _sendUnstreamed('PUT', url, headers, body, encoding);
+      _sendUnstreamed(
+        'PUT',
+        url,
+        headers,
+        cacheStrategy ?? JustAsyncStrategy(),
+        body: body,
+        encoding: encoding,
+      );
 
-  @override
   Future<Response> patch(
     Uri url, {
     Map<String, String>? headers,
     Object? body,
     Encoding? encoding,
+    CacheStrategy? cacheStrategy,
   }) =>
-      _sendUnstreamed('PATCH', url, headers, body, encoding);
+      _sendUnstreamed(
+        'PATCH',
+        url,
+        headers,
+        cacheStrategy ?? JustAsyncStrategy(),
+        body: body,
+        encoding: encoding,
+      );
 
-  @override
   Future<Response> delete(
     Uri url, {
     Map<String, String>? headers,
     Object? body,
     Encoding? encoding,
+    CacheStrategy? cacheStrategy,
   }) =>
-      _sendUnstreamed('DELETE', url, headers, body, encoding);
+      _sendUnstreamed(
+        'DELETE',
+        url,
+        headers,
+        cacheStrategy ?? JustAsyncStrategy(),
+        body: body,
+        encoding: encoding,
+      );
 
   /// Return [MultipartRequest] with given [url], [files], [headers], and [body].
   MultipartRequest _getMultiPartRequest(
@@ -391,37 +441,6 @@ class GitsHttp implements Client {
     } catch (e) {
       rethrow;
     }
-  }
-
-  @override
-  Future<Response> head(Uri url, {Map<String, String>? headers}) =>
-      _sendUnstreamed('HEAD', url, headers);
-
-  @override
-  Future<String> read(Uri url, {Map<String, String>? headers}) async {
-    final response = await get(url, headers: headers);
-    _checkResponseSuccess(url, response);
-    return response.body;
-  }
-
-  @override
-  Future<Uint8List> readBytes(Uri url, {Map<String, String>? headers}) async {
-    final response = await get(url, headers: headers);
-    _checkResponseSuccess(url, response);
-    return response.bodyBytes;
-  }
-
-  /// Throws an error if [response] is not successful.
-  void _checkResponseSuccess(Uri url, Response response) {
-    if (response.statusCode < 400) return;
-    var message = 'Request to $url failed with status ${response.statusCode}';
-    if (response.reasonPhrase != null) {
-      message = '$message: ${response.reasonPhrase}';
-    }
-    throw gits_exception.ClientException(
-      jsonBody: response.body,
-      statusCode: response.statusCode,
-    );
   }
 
   /// Returns a copy of [request].
@@ -494,7 +513,6 @@ class GitsHttp implements Client {
     }
   }
 
-  @override
   void close() {
     try {
       _logger.close();
