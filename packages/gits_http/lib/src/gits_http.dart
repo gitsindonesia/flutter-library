@@ -226,6 +226,14 @@ class GitsHttp {
     return request;
   }
 
+  String _getKeyCache({
+    required String method,
+    required Uri url,
+    Map<String, String>? headers,
+    Object? body,
+  }) =>
+      '$method-${url.hashCode}-${headers.toString().hashCode}-${body.toString().hashCode}';
+
   /// Sends a non-streaming [Request] and returns a non-streaming [Response],
   /// include put new headers and handle refresh token.
   Future<Response> _sendUnstreamed(
@@ -241,7 +249,8 @@ class GitsHttp {
 
       final request = _getRequest(method, url, newHeaders, body, encoding);
       final response = await cacheStrategy.applyStrategy(
-        key: '$method-${url.path}',
+        key: _getKeyCache(
+            method: method, url: url, headers: newHeaders, body: body),
         storage: _storage,
         fetch: () async {
           Response response = await _fetch(request, body);
@@ -511,6 +520,41 @@ class GitsHttp {
         jsonBody: response.body,
       );
     }
+  }
+
+  /// It returns a string that is a combination of the method and the url
+  ///
+  /// Args:
+  ///   method (String): The HTTP method of the request.
+  ///   url (Uri): The URL to be cached.
+  ///
+  /// Returns:
+  ///   A string that is the prefix for the cache key.
+  String? _getPrefixKeyCache({
+    String? method,
+    Uri? url,
+  }) {
+    String prefix = '';
+    if (method != null) {
+      prefix += method.toUpperCase();
+    }
+    if (url != null) {
+      prefix += '-${url.hashCode}';
+    }
+
+    return prefix.isEmpty ? null : prefix;
+  }
+
+  /// It clears the cache
+  ///
+  /// Args:
+  ///   method (String): The HTTP method of the request.
+  ///   url (Uri): The URL to clear the cache for.
+  Future<void> clearCache({
+    String? method,
+    Uri? url,
+  }) async {
+    await _storage.clear(prefix: _getPrefixKeyCache(method: method, url: url));
   }
 
   void close() {

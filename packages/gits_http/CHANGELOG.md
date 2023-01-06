@@ -1,3 +1,16 @@
+## 2.0.3
+
+- fix key hashcode for cache strategy
+
+## 2.0.2
+
+- fix key for cache strategy
+- add clearCache method in GitsHttp
+
+## 2.0.1
+
+- fix key for cache strategy
+
 ## 2.0.0
 
 - stable version with add cache strategy
