@@ -232,7 +232,7 @@ class GitsHttp {
     Map<String, String>? headers,
     Object? body,
   }) =>
-      '$method-${url.hashCode}-${headers.hashCode}-${body.hashCode}';
+      '$method-${url.hashCode}-${headers.toString().hashCode}-${body.toString().hashCode}';
 
   /// Sends a non-streaming [Request] and returns a non-streaming [Response],
   /// include put new headers and handle refresh token.

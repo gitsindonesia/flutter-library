@@ -1,3 +1,7 @@
+## 2.0.3
+
+- fix key hashcode for cache strategy
+
 ## 2.0.2
 
 - fix key for cache strategy
