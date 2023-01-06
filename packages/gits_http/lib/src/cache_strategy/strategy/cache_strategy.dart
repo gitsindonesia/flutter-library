@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
 import '../model/cache_wrapper.dart';
 import '../storage/storage.dart';
 
-abstract class CacheStrategy {
+abstract class CacheStrategy extends Equatable {
   static const defaultTTLValue = Duration(hours: 1);
 
   /// It takes a key, a response, and a storage object, and then it stores the response in the storage

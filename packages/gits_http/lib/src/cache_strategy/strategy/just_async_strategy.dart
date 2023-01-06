@@ -11,4 +11,7 @@ class JustAsyncStrategy extends CacheStrategy {
       required Future<Response> Function() fetch}) {
     return invokeAsync(key: key, storage: storage, fetch: fetch);
   }
+
+  @override
+  List<Object?> get props => [];
 }

@@ -32,4 +32,7 @@ class JustCacheStrategy extends CacheStrategy {
 
     return cached;
   }
+
+  @override
+  List<Object?> get props => [ttlValue, keepExpiredCache];
 }

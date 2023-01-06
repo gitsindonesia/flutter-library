@@ -34,4 +34,7 @@ class AsyncOrCacheStrategy extends CacheStrategy {
     );
     return cached ?? response;
   }
+
+  @override
+  List<Object?> get props => [ttlValue, keepExpiredCache];
 }

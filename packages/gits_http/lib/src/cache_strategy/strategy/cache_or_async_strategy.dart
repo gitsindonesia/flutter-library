@@ -26,4 +26,7 @@ class CacheOrAsyncStrategy extends CacheStrategy {
         ) ??
         await invokeAsync(key: key, storage: storage, fetch: fetch);
   }
+
+  @override
+  List<Object?> get props => [ttlValue, keepExpiredCache];
 }

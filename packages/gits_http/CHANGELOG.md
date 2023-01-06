@@ -1,3 +1,8 @@
+## 2.0.0
+
+- stable version with add cache strategy
+- add equatable for each strategy
+
 ## 2.0.0-dev.3
 
 - fix fromMap for headers Map in cache wrapper
