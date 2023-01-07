@@ -1,3 +1,7 @@
+## 2.0.4
+
+- fix write to cache when status code success
+
 ## 2.0.3
 
 - fix key hashcode for cache strategy

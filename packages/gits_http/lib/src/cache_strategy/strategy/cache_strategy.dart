@@ -62,7 +62,9 @@ abstract class CacheStrategy extends Equatable {
     required Future<Response> Function() fetch,
   }) async {
     final response = await fetch();
-    _storeCacheData(key, response, storage);
+    if (response.statusCode >= 200 && response.statusCode <= 299) {
+      _storeCacheData(key, response, storage);
+    }
     return response;
   }
 
