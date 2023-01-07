@@ -317,7 +317,9 @@ class GitsHttp {
     Map<String, String>? queryParameters = body?.map(
       (key, value) => MapEntry(key, value.toString()),
     );
-    final urlWithBody = url.replace(queryParameters: queryParameters);
+    final urlWithBody = queryParameters?.isNotEmpty ?? false
+        ? url.replace(queryParameters: queryParameters)
+        : url;
     return _sendUnstreamed(
       'GET',
       urlWithBody,
