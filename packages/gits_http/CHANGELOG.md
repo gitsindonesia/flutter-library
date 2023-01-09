@@ -1,3 +1,7 @@
+## 2.0.5
+
+- fix add write to cache with strategy async_or_cache or cache_or_async
+
 ## 2.0.4
 
 - fix write to cache when status code success

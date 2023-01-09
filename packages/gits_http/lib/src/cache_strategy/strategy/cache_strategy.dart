@@ -2,10 +2,7 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart';
-
-import '../model/cache_wrapper.dart';
-import '../storage/storage.dart';
+import 'package:gits_http/gits_http.dart';
 
 abstract class CacheStrategy extends Equatable {
   static const defaultTTLValue = Duration(hours: 1);
@@ -62,7 +59,9 @@ abstract class CacheStrategy extends Equatable {
     required Future<Response> Function() fetch,
   }) async {
     final response = await fetch();
-    if (response.statusCode >= 200 && response.statusCode <= 299) {
+    if (response.statusCode >= 200 &&
+        response.statusCode <= 299 &&
+        (this is AsyncOrCacheStrategy || this is CacheOrAsyncStrategy)) {
       _storeCacheData(key, response, storage);
     }
     return response;
