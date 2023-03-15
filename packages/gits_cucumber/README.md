@@ -1,39 +1,207 @@
-<!-- 
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Gits Cucumber
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages). 
+`gits_cucumber` package builds on top of `patrol` and `integration_test` to make
+it easy to integration test with gherkin language.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages). 
--->
+It can be used on [gits_cli](https://pub.dev/packages/gits_cli).
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+## Installation
 
-## Features
+installation gits_cli
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+```console
+dart pub global activate gits_cli
+```
 
-## Getting started
+installation gits_cucumber in your project
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+```console
+dart pub add gits_cucumber --dev
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder. 
+To use gits_cucumber create file `cucumber_test.dart` in your `integration_test` directory.
+Then import it:
 
 ```dart
-const like = 'sample';
+import 'package:gits_cucumber/gits_cucumber.dart';
 ```
 
-## Additional information
+Once imported, you can write widget tests:
 
-TODO: Tell users more about the package: where to find more information, how to 
-contribute to the package, how to file issues, what response they can expect 
-from the package authors, and more.
+```dart title="integration_test/cucumber_test.dart"
+import 'support/cucumber_config.dart';
+import 'support/cucumber_hook.dart';
+import 'support/step_definitions.dart';
+
+void main() async {
+  await GitsCucumber(
+    config: CucumberConfig(),
+    hook: CucumberHook(),
+    reporter: [JsonReporter(), StdoutReporter()],
+    stepDefinitions: stepDefinitions,
+  ).execute();
+}
+```
+
+### Config
+
+You can create `Config` or make it default null:
+
+```dart title="integration_test/support/cucumber_config.dart"
+import 'package:core/core.dart';
+import 'package:gits_cucumber/gits_cucumber.dart';
+
+class CucumberConfig extends Config {
+  @override
+  bool get nativeAutomation => false;
+
+  @override
+  NativeAutomatorConfig get nativeAutomatorConfig =>
+      const NativeAutomatorConfig(
+        androidAppName: Environment.appName,
+        iosAppName: Environment.appName,
+        packageName: Environment.androidApplicationId,
+        bundleId: Environment.iosApplicationId,
+      );
+
+  @override
+  PatrolTesterConfig get patrolTesterConfig => const PatrolTesterConfig(
+        visibleTimeout: Duration(minutes: 1),
+      );
+
+  @override
+  bool get skipScenario => false;
+
+  @override
+  Duration get timeout => const Duration(minutes: 5);
+}
+```
+
+### Hook
+
+Now you can add your `Hook` for cucumber:
+
+```dart title="integration_test/support/cucumber_hook.dart"
+import 'package:core/core.dart';
+import 'package:gits_cucumber/gits_cucumber.dart';
+import 'package:gits_flutter_starter_kit/main.dart' as app;
+
+class CucumberHook extends Hook {
+  @override
+  Future<void> onBeforeExecute() async {
+    await app.init();
+  }
+
+  @override
+  Future<void> onAfterExecute() async {}
+
+  @override
+  Future<void> onBeforeFeature(PatrolTester $) async {}
+
+  @override
+  Future<void> onAfterFeature(PatrolTester $) async {
+    await FlutterSecureStorageHelper.logout();
+  }
+
+  @override
+  Future<void> onBeforeScenario(PatrolTester $) async {
+    await $.pumpWidget(const app.MyApp());
+  }
+
+  @override
+  Future<void> onAfterScenario(PatrolTester $) async {
+    locator<GoRouter>().go('/');
+  }
+
+  @override
+  Future<void> onBeforeStep(PatrolTester $) async {}
+
+  @override
+  Future<void> onAfterStep(PatrolTester $) async {}
+}
+```
+
+### Step Definitions
+
+and the requirement gits_cucumber its `step_definitions.dart`:
+
+```dart title="integration_test/support/step_definitions.dart"
+import 'package:flutter/material.dart';
+import 'package:gits_cucumber/gits_cucumber.dart';
+
+Map<RegExp, Function> stepDefinitions = {
+  // Action
+  RegExp(r'I wait for "([^"]*)" key to visible'):
+      (PatrolTester $, String key) async {
+    await $(Key(key)).waitUntilVisible();
+  },
+  RegExp(r'I clear textfield in "([^"]*)" key'):
+      (PatrolTester $, String key) async {
+    await $(Key(key)).enterText('');
+  },
+  RegExp(r'I enter "([^"]*)" into "([^"]*)" key'):
+      (PatrolTester $, String value, String key) async {
+    await $(Key(key)).enterText(value);
+  },
+  RegExp(r'I scroll in "([^"]*)" key until visible "([^"]*)" key'):
+      (PatrolTester $, String scrollKey, String visibleKey) async {
+    await $(Key(visibleKey))
+        .scrollTo(scrollable: $(Key(scrollKey)).$(Scrollable));
+  },
+  RegExp(r'I tap "([^"]*)" key'): (PatrolTester $, String key) async {
+    await $(Key(key)).tap();
+  },
+  RegExp(r'I longtap "([^"]*)" key'): (PatrolTester $, String key) async {
+    await $.tester.longPress($(key));
+  },
+};
+```
+
+you can add your custom another step definitions with `RegExp`
+
+- String `"([^"]*)"`
+- num `"(\d+)"`
+- Select `"(JSON|YAML|XML|HTML)"`
+
+or other reg exp just on grouping `()`.
+
+### Reporters
+
+Reporters are classes that are able to report on the status of the test run. This could be a simple as merely logging scenario result to the console. There are a number of built-in reporter:
+
+- `StdoutReporter` : Logs all messages from the test run to the standard output (console).
+- `JsonReporter` : creates a JSON file with the results of the test run which can then be used by 'https://www.npmjs.com/package/cucumber-html-reporter.' to create a HTML report. You can pass in the file path of the json file to be created
+
+### Features
+
+write your feature in integration_test/features/login.feature:
+
+```feature title="integration_test/features/login.feature"
+Feature: Login
+
+  Scenario: Login with username and pin then failed
+    When I enter "example@gits.id" into "inputEmail" key
+    When I scroll in "scrollLogin" key until visible "inputPin" key
+    When I enter "123455" into "inputPin" key
+    When I scroll in "scrollLogin" key until visible "btnLogin" key
+    When I tap "btnLogin" key
+
+  Scenario: Login with username and pin then success
+    When I enter "example@gits.id" into "inputEmail" key
+    When I scroll in "scrollLogin" key until visible "inputPin" key
+    When I enter "123456" into "inputPin" key
+    When I scroll in "scrollLogin" key until visible "btnLogin" key
+    When I tap "btnLogin" key
+```
+
+### Gits Cli
+
+Now you done for setup all GitsCucumber then you can call gits_cli command:
+
+```console
+gits cucumber
+```
+
+by default run `integration_test/cucumber_test.dart` by flavor dev. if you want to running flavor stag or prod just add argument `--flavor stag` or `--flavor prod`
