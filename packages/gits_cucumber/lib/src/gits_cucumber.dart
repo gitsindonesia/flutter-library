@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gits_cucumber/src/report/reporter.dart';
 import 'package:gits_cucumber/src/support/support.dart';
@@ -23,23 +24,19 @@ class GitsCucumber {
 
   List<Gherkin> gherkins = [];
 
-  List<Gherkin> _getGherkinFromNdjson() {
-    const ndjsonGherkin = String.fromEnvironment('NDJSON_GHERKIN');
+  Future<List<Gherkin>> _getGherkinFromNdjson() async {
+    final ndjsonGherkin = await rootBundle
+        .loadString('integration_test/ndjson/ndjson_gherkin.json');
 
     if (ndjsonGherkin.isEmpty) {
       print(
-          'ndjson gherkin is empty, make sure to set --dart-define="NDJSON_GHERKIN=<gzip_gherkin>"');
+          'integration_test/ndjson/ndjson_gherkin.json is empty please set assets this in your pubspec.yaml');
       exit(1);
     }
 
     List<Gherkin> gherkins = [];
 
-    final gzipNdjson =
-        ndjsonGherkin.split(',').map((e) => int.parse(e)).toList();
-    final decoded = gzip.decode(gzipNdjson);
-    final ndjson = utf8.decode(decoded);
-
-    final List jsonGherkin = jsonDecode(ndjson);
+    final List jsonGherkin = jsonDecode(ndjsonGherkin);
 
     for (final element in jsonGherkin) {
       Source? source;
@@ -72,9 +69,8 @@ class GitsCucumber {
   }
 
   Future<void> execute() async {
-    gherkins = _getGherkinFromNdjson();
+    gherkins = await _getGherkinFromNdjson();
     await reporter.onGherkinLoaded(gherkins);
-
     await hook.onBeforeExecute();
     for (final feature in gherkins) {
       await _handleFeature(feature);
