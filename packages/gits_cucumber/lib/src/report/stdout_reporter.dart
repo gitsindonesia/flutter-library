@@ -10,6 +10,7 @@ class StdoutReporter extends Reporter {
 
   FeatureGherkinDocument? featureGherkinDocument;
   ChildrenFeatureGherkinDocument? childrenFeatureGherkinDocument;
+  ChildrenFeatureGherkinDocument? childrenFeatureGherkinDocumentBackground;
   StepsGherkinDocument? stepsGherkinDocument;
 
   void printStdout(String message) {
@@ -72,6 +73,9 @@ class StdoutReporter extends Reporter {
                 (astNodeId) => getIdScenario(element) == astNodeId) !=
             null);
 
+    childrenFeatureGherkinDocumentBackground = featureGherkinDocument?.children
+        ?.firstWhereOrNull((element) => element.background != null);
+
     printStdout(
       '    📝 Scenario ${childrenFeatureGherkinDocument?.background?.name ?? childrenFeatureGherkinDocument?.scenario?.name ?? 'Unnamed'}',
     );
@@ -80,6 +84,7 @@ class StdoutReporter extends Reporter {
   @override
   Future<void> onAfterScenario(Gherkin feature, Pickle pickle) async {
     childrenFeatureGherkinDocument = null;
+    childrenFeatureGherkinDocumentBackground = null;
   }
 
   @override
@@ -102,6 +107,12 @@ class StdoutReporter extends Reporter {
               getStepsGherkinDocumentFromStepsPickle(element.scenario, step);
         }
       }
+    }
+
+    if (stepsGherkinDocument == null &&
+        childrenFeatureGherkinDocumentBackground?.background != null) {
+      stepsGherkinDocument = getStepsGherkinDocumentFromStepsPickle(
+          childrenFeatureGherkinDocumentBackground?.background, step);
     }
   }
 
