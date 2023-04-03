@@ -15,6 +15,7 @@ class JsonReporter implements Reporter {
 
   FeatureGherkinDocument? featureGherkinDocument;
   ChildrenFeatureGherkinDocument? childrenFeatureGherkinDocument;
+  ChildrenFeatureGherkinDocument? childrenFeatureGherkinDocumentBackground;
 
   int duration = 0;
   DateTime now = DateTime.now();
@@ -151,6 +152,9 @@ class JsonReporter implements Reporter {
                 (astNodeId) => getIdScenario(element) == astNodeId) !=
             null);
 
+    childrenFeatureGherkinDocumentBackground = featureGherkinDocument?.children
+        ?.firstWhereOrNull((element) => element.background != null);
+
     if (childrenFeatureGherkinDocument != null) {
       jsonScenario = createJsonScenario(childrenFeatureGherkinDocument!);
     }
@@ -165,6 +169,7 @@ class JsonReporter implements Reporter {
     if (jsonScenario != null) jsonScenarios.add(jsonScenario!);
     jsonScenario = null;
     childrenFeatureGherkinDocument = null;
+    childrenFeatureGherkinDocumentBackground = null;
     jsonSteps.clear();
   }
 
@@ -190,6 +195,12 @@ class JsonReporter implements Reporter {
               getStepsGherkinDocumentFromStepsPickle(element.scenario, step);
         }
       }
+    }
+
+    if (stepsGherkinDocument == null &&
+        childrenFeatureGherkinDocumentBackground?.background != null) {
+      stepsGherkinDocument = getStepsGherkinDocumentFromStepsPickle(
+          childrenFeatureGherkinDocumentBackground?.background, step);
     }
 
     if (stepsGherkinDocument != null) {
