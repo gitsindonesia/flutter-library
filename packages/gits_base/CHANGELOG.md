@@ -1,3 +1,7 @@
+## 1.4.2
+
+- build: bump version dependencies
+
 ## 1.4.1
 
 - change create blocprovider for cubit to blocprovider.value to manualy close cubit

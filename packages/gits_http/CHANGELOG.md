@@ -1,3 +1,7 @@
+## 2.0.6
+
+- build: bump version dependencies
+
 ## 2.0.5
 
 - fix add write to cache with strategy async_or_cache or cache_or_async
