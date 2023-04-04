@@ -1,3 +1,7 @@
+## 2.0.2
+
+- build: bump version dependencies
+
 ## 2.0.1
 
 - fix payload local notification with 'gits_inspector'
