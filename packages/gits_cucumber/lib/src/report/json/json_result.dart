@@ -1,20 +1,25 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
+
 import 'json_status.dart';
 
-class JsonResult {
+class JsonResult extends Equatable {
   JsonResult({
     required this.status,
     required this.duration,
+    this.errorMessage,
   });
 
   final JsonStatus status;
   final int duration;
+  final String? errorMessage;
 
   Map<String, dynamic> toMap() {
     return {
       'status': status.name,
       'duration': duration,
+      'error_message': errorMessage,
     };
   }
 
@@ -22,6 +27,7 @@ class JsonResult {
     return JsonResult(
       status: JsonStatus.fromString(map['status'] ?? ''),
       duration: map['duration']?.toInt() ?? 0,
+      errorMessage: map['error_message'],
     );
   }
 
@@ -33,10 +39,15 @@ class JsonResult {
   JsonResult copyWith({
     JsonStatus? status,
     int? duration,
+    String? errorMessage,
   }) {
     return JsonResult(
       status: status ?? this.status,
       duration: duration ?? this.duration,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
+
+  @override
+  List<Object?> get props => [status, duration, errorMessage];
 }

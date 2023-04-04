@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
+
 import 'json_match.dart';
 import 'json_result.dart';
 
-class JsonStep {
+class JsonStep extends Equatable {
   JsonStep({
     required this.name,
     required this.line,
@@ -57,5 +59,16 @@ class JsonStep {
       match: match ?? this.match,
       result: result ?? this.result,
     );
+  }
+
+  @override
+  List<Object?> get props {
+    return [
+      name,
+      line,
+      keyword,
+      match,
+      result,
+    ];
   }
 }

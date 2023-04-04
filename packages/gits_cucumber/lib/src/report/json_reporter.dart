@@ -17,9 +17,6 @@ class JsonReporter implements Reporter {
   ChildrenFeatureGherkinDocument? childrenFeatureGherkinDocument;
   ChildrenFeatureGherkinDocument? childrenFeatureGherkinDocumentBackground;
 
-  int duration = 0;
-  DateTime now = DateTime.now();
-
   JsonFeature createJsonFeature(Gherkin gherkin) {
     final gherkinDocument = gherkin.gherkinDocument?.gherkinDocument;
     final feature = gherkin.gherkinDocument?.gherkinDocument?.feature;
@@ -106,11 +103,13 @@ class JsonReporter implements Reporter {
             null);
   }
 
-  void afterStep(JsonStatus status) {
-    duration =
-        DateTime.now().millisecondsSinceEpoch - now.millisecondsSinceEpoch;
+  void afterStep(JsonStatus status, int duration, [String? errorMessage]) {
     jsonStep = jsonStep?.copyWith(
-      result: JsonResult(status: status, duration: duration),
+      result: JsonResult(
+        status: status,
+        duration: duration,
+        errorMessage: errorMessage,
+      ),
     );
     if (jsonStep != null) jsonSteps.add(jsonStep!);
     jsonStep = null;
@@ -176,7 +175,6 @@ class JsonReporter implements Reporter {
   @override
   Future<void> onBeforeStep(
       Gherkin feature, Pickle picke, StepsPickle step) async {
-    now = DateTime.now();
     StepsGherkinDocument? stepsGherkinDocument;
     if (childrenFeatureGherkinDocument?.background != null) {
       stepsGherkinDocument = getStepsGherkinDocumentFromStepsPickle(
@@ -209,20 +207,20 @@ class JsonReporter implements Reporter {
   }
 
   @override
-  Future<void> onFailedStep(
-      Gherkin feature, Pickle picke, StepsPickle step) async {
-    afterStep(JsonStatus.failed);
+  Future<void> onFailedStep(Gherkin feature, Pickle picke, StepsPickle step,
+      int duration, Object exception) async {
+    afterStep(JsonStatus.failed, duration, exception.toString());
   }
 
   @override
   Future<void> onPassedStep(
-      Gherkin feature, Pickle picke, StepsPickle step) async {
-    afterStep(JsonStatus.passed);
+      Gherkin feature, Pickle picke, StepsPickle step, int duration) async {
+    afterStep(JsonStatus.passed, duration);
   }
 
   @override
   Future<void> onSkipStep(
-      Gherkin feature, Pickle picke, StepsPickle step) async {
-    afterStep(JsonStatus.skipped);
+      Gherkin feature, Pickle picke, StepsPickle step, int duration) async {
+    afterStep(JsonStatus.skipped, duration);
   }
 }

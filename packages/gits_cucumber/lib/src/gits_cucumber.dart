@@ -117,20 +117,34 @@ class GitsCucumber {
     await reporter.onBeforeScenario(feature, scenario);
     await hook.onBeforeScenario($);
     for (final step in scenario.pickle?.steps ?? <StepsPickle>[]) {
+      DateTime now = DateTime.now();
+      await reporter.onBeforeStep(feature, scenario, step);
       if (skipAnotherStep) {
-        await reporter.onBeforeStep(feature, scenario, step);
-        await reporter.onSkipStep(feature, scenario, step);
+        await reporter.onSkipStep(feature, scenario, step, 0);
         continue;
       }
       try {
+        bool foundRegExp = false;
         for (final regExp in stepDefinitions.keys) {
           if (regExp.hasMatch(step.text ?? '')) {
+            foundRegExp = true;
             await _handleStep($, regExp, feature, scenario, step);
+            final duration = (DateTime.now().millisecondsSinceEpoch -
+                    now.millisecondsSinceEpoch) *
+                1000000;
+            await reporter.onPassedStep(feature, scenario, step, duration);
             break;
           }
         }
+
+        if (!foundRegExp) {
+          throw Exception('${step.text} is not define in step definitions');
+        }
       } catch (e) {
-        await reporter.onFailedStep(feature, scenario, step);
+        final duration = (DateTime.now().millisecondsSinceEpoch -
+                now.millisecondsSinceEpoch) *
+            1000000;
+        await reporter.onFailedStep(feature, scenario, step, duration, e);
         skipAnotherStep = true;
       }
     }
@@ -140,7 +154,6 @@ class GitsCucumber {
 
   Future<void> _handleStep(PatrolTester $, RegExp regExp, Gherkin feature,
       Pickle scenario, StepsPickle step) async {
-    await reporter.onBeforeStep(feature, scenario, step);
     await hook.onBeforeStep($);
 
     final match = regExp.firstMatch(step.text ?? '');
@@ -209,9 +222,9 @@ class GitsCucumber {
             match?.group(9));
         break;
       default:
+        throw Exception('Maximum argument is 9 in step definitions');
     }
 
     await hook.onAfterStep($);
-    await reporter.onPassedStep(feature, scenario, step);
   }
 }

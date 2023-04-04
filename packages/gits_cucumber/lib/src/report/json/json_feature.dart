@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
+
 import 'json_scenario.dart';
 import 'json_tag.dart';
 
-class JsonFeature {
+class JsonFeature extends Equatable {
   JsonFeature({
     required this.uri,
     required this.name,
@@ -76,5 +78,19 @@ class JsonFeature {
       elements: elements ?? this.elements,
       keyword: keyword ?? this.keyword,
     );
+  }
+
+  @override
+  List<Object?> get props {
+    return [
+      uri,
+      name,
+      description,
+      line,
+      id,
+      tags,
+      elements,
+      keyword,
+    ];
   }
 }

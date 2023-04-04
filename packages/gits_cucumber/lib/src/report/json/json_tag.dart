@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-class JsonTag {
+import 'package:equatable/equatable.dart';
+
+class JsonTag extends Equatable {
   JsonTag({
     required this.name,
     required this.line,
@@ -37,4 +39,7 @@ class JsonTag {
       line: line ?? this.line,
     );
   }
+
+  @override
+  List<Object?> get props => [name, line];
 }

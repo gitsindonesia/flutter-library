@@ -45,23 +45,23 @@ extension ListReporters on List<Reporter> {
   }
 
   Future<void> onPassedStep(
-      Gherkin feature, Pickle scenario, StepsPickle step) async {
+      Gherkin feature, Pickle scenario, StepsPickle step, int duration) async {
     for (var element in this) {
-      await element.onPassedStep(feature, scenario, step);
+      await element.onPassedStep(feature, scenario, step, duration);
     }
   }
 
-  Future<void> onFailedStep(
-      Gherkin feature, Pickle pickle, StepsPickle step) async {
+  Future<void> onFailedStep(Gherkin feature, Pickle pickle, StepsPickle step,
+      int duration, Object exception) async {
     for (var element in this) {
-      await element.onFailedStep(feature, pickle, step);
+      await element.onFailedStep(feature, pickle, step, duration, exception);
     }
   }
 
   Future<void> onSkipStep(
-      Gherkin feature, Pickle pickle, StepsPickle step) async {
+      Gherkin feature, Pickle pickle, StepsPickle step, int duration) async {
     for (var element in this) {
-      await element.onSkipStep(feature, pickle, step);
+      await element.onSkipStep(feature, pickle, step, duration);
     }
   }
 }
@@ -74,7 +74,18 @@ abstract class Reporter {
   Future<void> onBeforeScenario(Gherkin feature, Pickle pickle);
   Future<void> onAfterScenario(Gherkin feature, Pickle pickle);
   Future<void> onBeforeStep(Gherkin feature, Pickle pickle, StepsPickle step);
-  Future<void> onFailedStep(Gherkin feature, Pickle pickle, StepsPickle step);
-  Future<void> onPassedStep(Gherkin feature, Pickle pickle, StepsPickle step);
-  Future<void> onSkipStep(Gherkin feature, Pickle pickle, StepsPickle step);
+  Future<void> onFailedStep(Gherkin feature, Pickle pickle, StepsPickle step,
+      int duration, Object exception);
+  Future<void> onPassedStep(
+    Gherkin feature,
+    Pickle pickle,
+    StepsPickle step,
+    int duration,
+  );
+  Future<void> onSkipStep(
+    Gherkin feature,
+    Pickle pickle,
+    StepsPickle step,
+    int duration,
+  );
 }

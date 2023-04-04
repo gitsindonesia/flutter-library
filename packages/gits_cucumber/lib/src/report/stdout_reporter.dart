@@ -117,33 +117,33 @@ class StdoutReporter extends Reporter {
   }
 
   @override
-  Future<void> onFailedStep(
-      Gherkin feature, Pickle pickle, StepsPickle step) async {
+  Future<void> onFailedStep(Gherkin feature, Pickle pickle, StepsPickle step,
+      int duration, Object exception) async {
     failed++;
-    if (stepsGherkinDocument != null) {
-      printStdout(
-        '        ❌ Failed Step ${stepsGherkinDocument?.text ?? 'Unnamed'}',
-      );
-      stepsGherkinDocument = null;
-    }
+    printStdout(
+      '        ❌ Failed Step ${stepsGherkinDocument?.text ?? 'Unnamed'} in ${duration ~/ 1000000} milisecond',
+    );
+    printStdout('');
+    printStdout(exception.toString());
+    stepsGherkinDocument = null;
   }
 
   @override
   Future<void> onPassedStep(
-      Gherkin feature, Pickle pickle, StepsPickle step) async {
+      Gherkin feature, Pickle pickle, StepsPickle step, int duration) async {
     passed++;
     printStdout(
-      '        ✅ Passed Step ${stepsGherkinDocument?.text ?? 'Unnamed'}',
+      '        ✅ Passed Step ${stepsGherkinDocument?.text ?? 'Unnamed'} in ${duration ~/ 1000000} milisecond',
     );
     stepsGherkinDocument = null;
   }
 
   @override
   Future<void> onSkipStep(
-      Gherkin feature, Pickle pickle, StepsPickle step) async {
+      Gherkin feature, Pickle pickle, StepsPickle step, int duration) async {
     skipped++;
     printStdout(
-      '        ⭕ Skipped Step ${stepsGherkinDocument?.text ?? 'Unnamed'}',
+      '        ⭕ Skipped Step ${stepsGherkinDocument?.text ?? 'Unnamed'} in ${duration ~/ 1000000} milisecond',
     );
     stepsGherkinDocument = null;
   }

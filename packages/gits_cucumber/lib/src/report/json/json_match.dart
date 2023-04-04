@@ -1,6 +1,8 @@
 import 'dart:convert';
 
-class JsonMatch {
+import 'package:equatable/equatable.dart';
+
+class JsonMatch extends Equatable {
   JsonMatch({
     required this.location,
   });
@@ -31,4 +33,7 @@ class JsonMatch {
       location: location ?? this.location,
     );
   }
+
+  @override
+  List<Object?> get props => [location];
 }

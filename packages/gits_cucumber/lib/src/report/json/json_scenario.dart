@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:equatable/equatable.dart';
+
 import 'json_step.dart';
 import 'json_tag.dart';
 
-class JsonScenario {
+class JsonScenario extends Equatable {
   JsonScenario({
     required this.description,
     required this.id,
@@ -75,5 +77,19 @@ class JsonScenario {
       tags: tags ?? this.tags,
       steps: steps ?? this.steps,
     );
+  }
+
+  @override
+  List<Object?> get props {
+    return [
+      description,
+      id,
+      keyword,
+      line,
+      name,
+      type,
+      tags,
+      steps,
+    ];
   }
 }

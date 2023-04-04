@@ -1,3 +1,8 @@
+## 1.2.0
+
+- fix: report json duration
+- feat: show error message if step is failed
+
 ## 1.1.1
 
 - fix: background steps not include in report
