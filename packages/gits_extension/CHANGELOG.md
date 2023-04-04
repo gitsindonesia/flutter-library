@@ -1,3 +1,7 @@
+## 0.0.5
+
+- chore: update licences
+
 ## 0.0.4
 
 - update package time: ^2.1.3
