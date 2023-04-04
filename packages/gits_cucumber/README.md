@@ -167,6 +167,19 @@ you can add your custom another step definitions with `RegExp`
 
 or other reg exp just on grouping `()`.
 
+### Add Assets in pubspec.yaml
+
+1. Create directory in `integration_test/ndjson/`
+2. Then add as assets in `pubspec.yaml`
+
+```yaml title="pubspec.yaml"
+...
+flutter:
+  uses-material-design: true
+  assets:
+    - integration_test/ndjson/
+```
+
 ### Reporters
 
 Reporters are classes that are able to report on the status of the test run. This could be a simple as merely logging scenario result to the console. There are a number of built-in reporter:

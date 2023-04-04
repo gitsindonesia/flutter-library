@@ -1,3 +1,8 @@
+## 1.2.1
+
+- build: bump version dependencies
+- docs: add documentation in readme
+
 ## 1.2.0
 
 - fix: report json duration
