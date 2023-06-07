@@ -1,7 +1,6 @@
 import 'package:example/cubit/main_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:gits_base/gits_base.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
   runApp(const MyApp());
@@ -54,7 +53,7 @@ class _MainPageState extends State<MainPage>
             ),
             Text(
               '$counter',
-              style: Theme.of(context).textTheme.headline4,
+              style: Theme.of(context).textTheme.headlineMedium,
             ),
           ],
         ),
