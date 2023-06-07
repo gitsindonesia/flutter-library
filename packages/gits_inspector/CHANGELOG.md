@@ -1,3 +1,8 @@
+## 3.0.0
+
+- build: bump version dependencies
+- chore: support dart 3.0.0 and flutter 3.10.0
+
 ## 2.0.2
 
 - build: bump version dependencies

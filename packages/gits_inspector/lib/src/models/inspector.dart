@@ -4,7 +4,7 @@ import 'request_inspector.dart';
 import 'response_inspector.dart';
 
 /// Data class for inspector will used to save to local storage.
-class Inspector {
+final class Inspector {
   Inspector({
     required this.uuid,
     required this.request,

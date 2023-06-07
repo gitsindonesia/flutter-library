@@ -2,7 +2,7 @@ import 'package:gits_inspector/gits_inspector.dart';
 import 'package:sqflite/sqflite.dart';
 
 /// Service helper for sqlite inspector.
-abstract class InspectorService {
+abstract final class InspectorService {
   /// The name of table sqlite
   static const String _table = 'inspector';
 

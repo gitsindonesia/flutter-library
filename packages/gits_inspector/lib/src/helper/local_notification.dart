@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 /// Instance class for local notification functionality.
-class LocalNotification {
+final class LocalNotification {
   /// Wrap the package [FlutterLocalNotificationsPlugin].
   late FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 

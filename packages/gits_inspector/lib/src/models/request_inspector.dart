@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 /// Data class for request inspector will used to save to local storage.
-class RequestInspector {
+final class RequestInspector {
   RequestInspector({
     required this.url,
     required this.method,
