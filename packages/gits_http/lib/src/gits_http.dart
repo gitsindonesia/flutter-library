@@ -16,7 +16,7 @@ import 'cache_strategy/cache_strategy.dart';
 import 'errors/gits_exceptions.dart' as gits_exception;
 
 /// The base class for an HTTP client.
-final class GitsHttp {
+class GitsHttp {
   GitsHttp({
     int timeout = 30000,
     GitsInspector? gitsInspector,
