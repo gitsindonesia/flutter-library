@@ -1,7 +1,7 @@
 import '../../gits_http.dart';
 
 /// The interface for Gits HTTP Exception.
-abstract class GitsException {
+sealed class GitsException {
   GitsException({
     this.statusCode,
     this.jsonBody,
@@ -121,7 +121,7 @@ abstract class GitsException {
 }
 
 /// An exception caused by an error status code 300-399.
-class RedirectionException extends GitsException {
+final class RedirectionException extends GitsException {
   RedirectionException({
     required super.statusCode,
     required super.jsonBody,
@@ -142,7 +142,7 @@ class RedirectionException extends GitsException {
 }
 
 /// An exception caused by an error status code 400-499.
-class ClientException extends GitsException {
+final class ClientException extends GitsException {
   ClientException({
     required super.statusCode,
     required super.jsonBody,
@@ -163,7 +163,7 @@ class ClientException extends GitsException {
 }
 
 /// An exception caused by an error status code 500-599.
-class ServerException extends GitsException {
+final class ServerException extends GitsException {
   ServerException({
     required super.statusCode,
     required super.jsonBody,
@@ -184,7 +184,7 @@ class ServerException extends GitsException {
 }
 
 /// An exception caused by an error status code 401.
-class UnauthorizedException extends GitsException {
+final class UnauthorizedException extends GitsException {
   UnauthorizedException({
     required super.statusCode,
     required super.jsonBody,
@@ -205,7 +205,7 @@ class UnauthorizedException extends GitsException {
 }
 
 /// An exception caused by an error timeout fetch http client.
-class TimeoutException extends GitsException {
+final class TimeoutException extends GitsException {
   @override
   GitsFailure toGitsFailure() {
     return TimeoutFailure(toString());
@@ -217,7 +217,7 @@ class TimeoutException extends GitsException {
 }
 
 /// An exception caused by an error in internal app.
-class InternalException extends GitsException {
+final class InternalException extends GitsException {
   @override
   GitsFailure toGitsFailure() {
     return InternalFailure(toString());
@@ -228,7 +228,7 @@ class InternalException extends GitsException {
 }
 
 /// An exception caused by an error status code 300-599 in do refresh token.
-class RefreshTokenException extends GitsException {
+final class RefreshTokenException extends GitsException {
   RefreshTokenException({
     required super.statusCode,
     required super.jsonBody,
@@ -249,7 +249,7 @@ class RefreshTokenException extends GitsException {
 }
 
 /// An exception caused by an error no internet connection.
-class NoInternetException extends GitsException {
+final class NoInternetException extends GitsException {
   @override
   GitsFailure toGitsFailure() {
     return NoInternetFailure(toString());
@@ -260,7 +260,7 @@ class NoInternetException extends GitsException {
 }
 
 /// An exception caused by an error no found data in cache.
-class CacheException extends GitsException {
+final class CacheException extends GitsException {
   @override
   GitsFailure toGitsFailure() {
     return CacheFailure(toString());

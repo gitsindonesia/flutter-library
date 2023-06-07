@@ -16,7 +16,7 @@ typedef ClearCondition = bool Function(BaseRequest request, Response response);
 typedef OnClearToken = Future<void> Function();
 
 /// [AuthTokenOption] handle token authorization
-class AuthTokenOption {
+final class AuthTokenOption {
   AuthTokenOption({
     this.typeHeader = 'Authorization',
     this.prefixHeader = 'Bearer',

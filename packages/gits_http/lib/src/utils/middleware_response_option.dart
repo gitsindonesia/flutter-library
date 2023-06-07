@@ -7,7 +7,7 @@ typedef OnMiddlewareResponse = Future<void> Function(Response response);
 typedef ConditionMiddlewareResponse = bool Function(
     BaseRequest request, Response response);
 
-class MiddlewareResponseOption {
+final class MiddlewareResponseOption {
   MiddlewareResponseOption({
     required this.condition,
     required this.onResponse,

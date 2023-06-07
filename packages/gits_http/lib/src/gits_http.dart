@@ -16,7 +16,7 @@ import 'cache_strategy/cache_strategy.dart';
 import 'errors/gits_exceptions.dart' as gits_exception;
 
 /// The base class for an HTTP client.
-class GitsHttp {
+final class GitsHttp {
   GitsHttp({
     int timeout = 30000,
     GitsInspector? gitsInspector,
@@ -393,16 +393,19 @@ class GitsHttp {
       );
 
   /// Return [MultipartRequest] with given [url], [files], [headers], and [body].
-  MultipartRequest _getMultiPartRequest(
+  Future<MultipartRequest> _getMultiPartRequest(
     Uri url, {
     Map<String, File>? files,
     Map<String, String>? headers,
     Map<String, String>? body,
-  }) {
+  }) async {
     var request = MultipartRequest('POST', url);
-    files?.forEach((key, value) async {
-      request.files.add(await MultipartFile.fromPath(key, value.path));
-    });
+    final keys = files?.keys ?? [];
+    for (var key in keys) {
+      final multipartFile =
+          await MultipartFile.fromPath(key, files?[key]?.path ?? '');
+      request.files.add(multipartFile);
+    }
 
     if (!(headers != null &&
         headers.containsKey(HttpHeaders.contentTypeHeader))) {
@@ -432,7 +435,7 @@ class GitsHttp {
     try {
       final newHeaders = await _putIfAbsentHeader(url, headers);
 
-      final request = _getMultiPartRequest(url,
+      final request = await _getMultiPartRequest(url,
           files: files, headers: newHeaders, body: body);
       Response response = await _fetch(request, body);
 

@@ -3,7 +3,7 @@ import 'package:http/http.dart';
 import '../storage/storage.dart';
 import 'cache_strategy.dart';
 
-class AsyncOrCacheStrategy extends CacheStrategy {
+final class AsyncOrCacheStrategy extends CacheStrategy {
   AsyncOrCacheStrategy({
     this.ttlValue = CacheStrategy.defaultTTLValue,
     this.keepExpiredCache = false,

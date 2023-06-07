@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 /// Data class for response inspector will used to save to local storage.
-class ResponseInspector {
+final class ResponseInspector {
   ResponseInspector({
     this.status,
     this.headers,
