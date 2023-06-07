@@ -1,3 +1,7 @@
+## 3.0.1
+
+- fix: remove final class for GitsInspector
+
 ## 3.0.0
 
 - build: bump version dependencies

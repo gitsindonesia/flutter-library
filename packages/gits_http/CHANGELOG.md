@@ -1,3 +1,7 @@
+## 3.0.1
+
+- fix: remove final class for GitsHttp
+
 ## 3.0.0
 
 - feat!: Requires Dart 3.0 or later.

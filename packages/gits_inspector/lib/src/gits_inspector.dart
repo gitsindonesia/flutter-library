@@ -7,7 +7,7 @@ import 'package:gits_inspector/src/helper/local_notification.dart';
 import 'package:gits_inspector/src/helper/shake_detector.dart';
 import 'package:gits_inspector/src/pages/gits_inspector_page.dart';
 
-final class GitsInspector {
+class GitsInspector {
   /// Should inspector be opened on device shake (works only with physical
   /// with sensors).
   final bool showInspectorOnShake;
