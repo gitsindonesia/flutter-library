@@ -1,4 +1,4 @@
-abstract class Storage {
+abstract interface class Storage {
   /// A function that takes a key and a value and returns a future.
   Future<void> write(String key, String value);
 

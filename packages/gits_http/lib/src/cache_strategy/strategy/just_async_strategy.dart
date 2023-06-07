@@ -3,7 +3,7 @@ import 'package:http/http.dart';
 import '../storage/storage.dart';
 import 'cache_strategy.dart';
 
-class JustAsyncStrategy extends CacheStrategy {
+final class JustAsyncStrategy extends CacheStrategy {
   @override
   Future<Response> applyStrategy(
       {required String key,

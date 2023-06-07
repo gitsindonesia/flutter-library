@@ -29,7 +29,7 @@ enum RefreshTokenMethod {
 }
 
 /// [RefreshTokenOption] handle refresh token authorization
-class RefreshTokenOption {
+final class RefreshTokenOption {
   RefreshTokenOption({
     required this.method,
     required this.url,

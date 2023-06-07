@@ -4,7 +4,7 @@ import '../../errors/gits_exceptions.dart';
 import '../storage/storage.dart';
 import 'cache_strategy.dart';
 
-class JustCacheStrategy extends CacheStrategy {
+final class JustCacheStrategy extends CacheStrategy {
   JustCacheStrategy({
     this.ttlValue = CacheStrategy.defaultTTLValue,
     this.keepExpiredCache = false,

@@ -3,7 +3,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'storage.dart';
 
-class CacheStorage implements Storage {
+final class CacheStorage implements Storage {
   static const _hiveBoxName = "gits_http_cache_storage";
 
   bool _hasInit = false;

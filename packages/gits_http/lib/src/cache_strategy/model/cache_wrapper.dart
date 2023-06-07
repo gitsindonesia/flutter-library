@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 
-class CacheWrapper {
+final class CacheWrapper {
   CacheWrapper({
     required this.cacheDate,
     required this.response,
