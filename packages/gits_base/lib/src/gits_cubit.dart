@@ -8,6 +8,7 @@ abstract class GitsCubit<T> extends Cubit<T> {
 
   /// Used to check if the widget is mounted or not.
   bool mounted = true;
+  BuildContext? context;
 
   /// Called when this object is inserted into the tree.
   void initState(BuildContext context) {}
@@ -110,6 +111,7 @@ abstract class GitsCubit<T> extends Cubit<T> {
   @override
   Future<void> close() {
     dispose();
+    context = null;
     mounted = false;
     return super.close();
   }

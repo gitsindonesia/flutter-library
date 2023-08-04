@@ -94,6 +94,7 @@ mixin GitsStatePage<T extends StatefulWidget, C extends GitsCubit> on State<T> {
       ],
       child: Builder(
         builder: (context) {
+          cubit.context = context;
           if (cubit.blocListeners(context).isEmpty) {
             return buildWidget(context);
           }
