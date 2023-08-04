@@ -1,3 +1,11 @@
+## 2.1.1
+
+- docs: update changelog
+
+## 2.1.0
+
+- feat(gits_base): add context in cubit
+
 ## 2.0.0
 
 - chore!: support dart 3.0.0 and flutter 3.10.0

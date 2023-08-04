@@ -1,6 +1,6 @@
 name: gits_base
 description: GitsBase is base for UI project include state management with cubit & hydrated.
-version: 2.1.0
+version: 2.1.1
 homepage: https://gits.id/
 repository: https://github.com/gitsindonesia/flutter-library/tree/main/packages/gits_base
 
