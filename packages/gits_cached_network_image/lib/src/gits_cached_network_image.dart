@@ -446,8 +446,8 @@ class GitsCachedNetworkImageProvider extends ImageProvider<NetworkImage>
   }
 
   @override
-  ImageStreamCompleter loadBuffer(
-      NetworkImage key, DecoderBufferCallback decode) {
+  ImageStreamCompleter loadImage(
+      NetworkImage key, ImageDecoderCallback decode) {
     final StreamController<ImageChunkEvent> chunkEvents =
         StreamController<ImageChunkEvent>();
 
@@ -467,7 +467,7 @@ class GitsCachedNetworkImageProvider extends ImageProvider<NetworkImage>
   Future<ui.Codec> _cachedOrAsync(
     GitsCachedNetworkImageProvider key,
     StreamController<ImageChunkEvent> chunkEvents,
-    DecoderBufferCallback decode,
+    ImageDecoderCallback decode,
   ) async {
     try {
       assert(key == this);
