@@ -214,7 +214,7 @@ Feature: Login
 Now you done for setup all GitsCucumber then you can call gits_cli command:
 
 ```console
-gits cucumber
+gits_cli cucumber
 ```
 
 by default run `integration_test/cucumber_test.dart` by flavor dev. if you want to running flavor stag or prod just add argument `--flavor stag` or `--flavor prod`
