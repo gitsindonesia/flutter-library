@@ -1,3 +1,7 @@
+## 2.1.1
+
+- fix: export PatrolIntegrationTester
+
 ## 2.1.0
 
 - upgrade patrol to 2.2.4
