@@ -2,7 +2,6 @@ library gits_cucumber;
 
 export 'package:patrol/patrol.dart'
     show NativeAutomatorConfig, PatrolTesterConfig;
-export 'package:patrol/patrol.dart';
 
 export 'src/gits_cucumber.dart';
 export 'src/models/models.dart';

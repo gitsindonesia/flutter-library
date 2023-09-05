@@ -5,10 +5,10 @@ class Hook {
 
   Future<void> onBeforeExecute() async {}
   Future<void> onAfterExecute() async {}
-  Future<void> onBeforeFeature(PatrolTester $) async {}
-  Future<void> onAfterFeature(PatrolTester $) async {}
-  Future<void> onBeforeScenario(PatrolTester $) async {}
-  Future<void> onAfterScenario(PatrolTester $) async {}
-  Future<void> onBeforeStep(PatrolTester $) async {}
-  Future<void> onAfterStep(PatrolTester $) async {}
+  Future<void> onBeforeFeature(PatrolIntegrationTester $) async {}
+  Future<void> onAfterFeature(PatrolIntegrationTester $) async {}
+  Future<void> onBeforeScenario(PatrolIntegrationTester $) async {}
+  Future<void> onAfterScenario(PatrolIntegrationTester $) async {}
+  Future<void> onBeforeStep(PatrolIntegrationTester $) async {}
+  Future<void> onAfterStep(PatrolIntegrationTester $) async {}
 }

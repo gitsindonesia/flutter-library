@@ -101,7 +101,6 @@ class GitsCucumber {
             }
           },
           timeout: Timeout(config?.timeout),
-          nativeAutomation: config?.nativeAutomation ?? false,
           nativeAutomatorConfig:
               config?.nativeAutomatorConfig ?? NativeAutomatorConfig(),
           config: config?.patrolTesterConfig ?? PatrolTesterConfig(),
@@ -112,7 +111,7 @@ class GitsCucumber {
   }
 
   Future<void> _handleScenario(
-      Gherkin feature, Pickle scenario, PatrolTester $) async {
+      Gherkin feature, Pickle scenario, PatrolIntegrationTester $) async {
     bool skipAnotherStep = false;
     await reporter.onBeforeScenario(feature, scenario);
     await hook.onBeforeScenario($);
@@ -152,8 +151,8 @@ class GitsCucumber {
     await reporter.onAfterScenario(feature, scenario);
   }
 
-  Future<void> _handleStep(PatrolTester $, RegExp regExp, Gherkin feature,
-      Pickle scenario, StepsPickle step) async {
+  Future<void> _handleStep(PatrolIntegrationTester $, RegExp regExp,
+      Gherkin feature, Pickle scenario, StepsPickle step) async {
     await hook.onBeforeStep($);
 
     final match = regExp.firstMatch(step.text ?? '');
