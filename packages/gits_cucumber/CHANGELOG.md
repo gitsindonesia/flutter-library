@@ -1,3 +1,7 @@
+## 2.1.0
+
+- upgrade patrol to 2.2.4
+
 ## 2.0.0
 
 - chore!: support dart 3.0.0 and flutter 3.10.0

@@ -1,3 +1,7 @@
+## 3.1.0
+
+- bump depedencies
+
 ## 3.0.1
 
 - fix: remove final class for GitsInspector

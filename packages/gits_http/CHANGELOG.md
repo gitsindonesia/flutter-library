@@ -1,3 +1,9 @@
+## 3.0.2
+
+- build: upgrade dependency http to ^1.1.0
+- build: upgrade dependency logger to ^2.0.1
+- build: upgrade dependency path_provider to ^2.1.0
+
 ## 3.0.1
 
 - fix: remove final class for GitsHttp
