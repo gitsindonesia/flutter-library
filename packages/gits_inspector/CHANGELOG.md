@@ -1,4 +1,8 @@
 
+## 3.2.1
+
+- downgrade intl to 0.18.1
+
 ## 3.2.0
 
 - upgrade intl to 0.19.0
