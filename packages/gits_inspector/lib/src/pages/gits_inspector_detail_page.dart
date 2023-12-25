@@ -11,9 +11,9 @@ import 'package:share_plus/share_plus.dart';
 class GitsInspectorDetailPage extends StatelessWidget {
   /// Constructor of [GitsInspectorDetailPage] with required [inspector].
   const GitsInspectorDetailPage({
-    Key? key,
+    super.key,
     required this.inspector,
-  }) : super(key: key);
+  });
 
   final Inspector inspector;
 
@@ -37,8 +37,15 @@ class GitsInspectorDetailPage extends StatelessWidget {
             title: Text(inspector.pathWithQuery, maxLines: 2),
             actions: [
               IconButton(
-                onPressed: () {
-                  Share.share(inspector.toMessageShare());
+                onPressed: () async {
+                  final box = context.findRenderObject() as RenderBox?;
+                  final rect = box != null
+                      ? box.localToGlobal(Offset.zero) & box.size
+                      : null;
+                  await Share.share(
+                    inspector.toMessageShare(),
+                    sharePositionOrigin: rect,
+                  );
                 },
                 icon: const Icon(Icons.share),
               ),

@@ -1,3 +1,13 @@
+
+## 3.2.0
+
+- upgrade intl to 0.19.0
+- upgrade flutter_local_notifications to 16.2.0
+- upgrade share_plus to 7.2.1
+- upgrade flutter_lints to 3.0.1
+- upgrade sensor_plus to 4.0.2
+- fixing cannot share inspector in ipad
+
 ## 3.1.0
 
 - bump depedencies

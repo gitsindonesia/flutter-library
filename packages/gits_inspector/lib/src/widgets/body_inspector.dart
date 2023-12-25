@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 /// Body widget for show [title] and [value].
 class BodyInspector extends StatelessWidget {
   const BodyInspector({
-    Key? key,
+    super.key,
     required this.title,
     required this.value,
-  }) : super(key: key);
+  });
 
   final String title;
   final String value;

@@ -7,9 +7,9 @@ import 'package:gits_inspector/src/widgets/text_item_inspector.dart';
 /// Show request section with given [inspector].
 class RequestSection extends StatelessWidget {
   const RequestSection({
-    Key? key,
+    super.key,
     required this.inspector,
-  }) : super(key: key);
+  });
 
   final Inspector inspector;
 

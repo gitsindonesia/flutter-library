@@ -1,3 +1,9 @@
+## 3.0.0
+
+Break Change:
+
+- Removed GitsHydrated
+
 ## 2.1.1
 
 - docs: update changelog

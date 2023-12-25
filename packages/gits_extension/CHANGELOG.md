@@ -1,3 +1,7 @@
+## 0.1.1
+
+- upgrade flutter_lints to 3.0.1
+
 ## 0.1.0
 
 - chore!: support dart 3.0.0 and flutter 3.10.0

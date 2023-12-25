@@ -9,7 +9,7 @@ import '../service/inspector_service.dart';
 
 /// The page will display list gits inspector http.
 class GitsInspectorPage extends StatefulWidget {
-  const GitsInspectorPage({Key? key}) : super(key: key);
+  const GitsInspectorPage({super.key});
 
   @override
   State<GitsInspectorPage> createState() => _GitsInspectorPageState();

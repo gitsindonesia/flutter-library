@@ -6,10 +6,10 @@ import 'package:gits_inspector/src/models/inspector.dart';
 /// Item inspector widget for show [ListTile] with given [item].
 class ItemInspector extends StatelessWidget {
   const ItemInspector({
-    Key? key,
+    super.key,
     required this.item,
     required this.onItemPressed,
-  }) : super(key: key);
+  });
 
   final Inspector item;
   final ValueChanged<Inspector> onItemPressed;

@@ -1,3 +1,10 @@
+## 3.0.0
+
+- minimal dart 3.0.0
+- upgrade patrol to 3.3.0
+- upgrade collection to 1.18.0
+- change lint to flutter_lints
+
 ## 2.1.1
 
 - fix: export PatrolIntegrationTester

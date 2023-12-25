@@ -1,3 +1,10 @@
+## 3.1.0
+
+- build: upgrade dependency http to ^1.1.2
+- build: uuid dependency http to ^4.3.1
+- build: gits_inspector dependency http to ^3.2.0
+- build: flutter_lint dependency http to ^3.0.1
+
 ## 3.0.2
 
 - build: upgrade dependency http to ^1.1.0

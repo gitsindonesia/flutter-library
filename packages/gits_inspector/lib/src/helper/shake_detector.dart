@@ -1,4 +1,6 @@
 ///Code from https://github.com/deven98/shake
+library;
+
 import 'dart:async';
 import 'dart:math';
 
@@ -52,7 +54,7 @@ final class ShakeDetector {
 
   /// Starts listening to accelerometer events
   void startListening() {
-    streamSubscription = accelerometerEvents.listen(
+    streamSubscription = accelerometerEventStream().listen(
       (AccelerometerEvent event) {
         double x = event.x;
         double y = event.y;

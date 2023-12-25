@@ -7,9 +7,9 @@ import 'package:gits_inspector/src/widgets/text_item_inspector.dart';
 /// Show overview section with given [inspector].
 class OverviewSection extends StatelessWidget {
   const OverviewSection({
-    Key? key,
+    super.key,
     required this.inspector,
-  }) : super(key: key);
+  });
 
   final Inspector inspector;
 

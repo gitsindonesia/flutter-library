@@ -9,7 +9,7 @@ export 'package:gits_cached_network_image/src/cached_manager/gits_cached_network
 
 class GitsCachedNetworkImage extends StatefulWidget {
   const GitsCachedNetworkImage({
-    Key? key,
+    super.key,
     required this.imageUrl,
     this.scale = 1.0,
     this.loadingBuilder,
@@ -32,7 +32,7 @@ class GitsCachedNetworkImage extends StatefulWidget {
     this.isAntiAlias = false,
     this.cacheWidth,
     this.cacheHeight,
-  }) : super(key: key);
+  });
 
   final String imageUrl;
   final double scale;

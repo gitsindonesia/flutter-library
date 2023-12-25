@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// A [GitsCubit] is abstract class with extend [Cubit] purpose
 /// to make clean state management combine with [GitsStatePage]
 abstract class GitsCubit<T> extends Cubit<T> {
-  GitsCubit(T initialState) : super(initialState);
+  GitsCubit(super.initialState);
 
   /// Used to check if the widget is mounted or not.
   bool mounted = true;
