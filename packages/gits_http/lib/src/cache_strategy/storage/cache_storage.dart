@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -11,11 +12,11 @@ final class CacheStorage implements Storage {
   CacheStorage();
 
   Future<dynamic> openBox() async {
-    if (!_hasInit) {
+    if (!_hasInit && !kIsWeb) {
       final dir = await getApplicationDocumentsDirectory();
       Hive.init(dir.path);
-      _hasInit = true;
     }
+    _hasInit = true;
     return Hive.openBox(_hiveBoxName);
   }
 
