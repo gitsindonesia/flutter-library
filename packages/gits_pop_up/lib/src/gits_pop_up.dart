@@ -220,7 +220,7 @@ class GitsPopUp {
               unRegisterFunc?.call();
             }, child: Builder(builder: (BuildContext context) {
               final TextStyle textStyle =
-                  Theme.of(context).textTheme.bodyText2!;
+                  Theme.of(context).textTheme.bodyMedium!;
               Widget child = DefaultTextStyle(
                   style: textStyle,
                   child: Stack(children: <Widget>[
