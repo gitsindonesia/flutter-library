@@ -503,4 +503,7 @@ class GitsCachedNetworkImageProvider extends ImageProvider<NetworkImage>
   @override
   String toString() =>
       '${objectRuntimeType(this, 'NetworkImage')}("$url", scale: $scale)';
+      
+  @override
+  WebHtmlElementStrategy get webHtmlElementStrategy => WebHtmlElementStrategy.prefer;
 }
