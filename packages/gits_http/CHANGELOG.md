@@ -1,3 +1,7 @@
+## 3.1.5
+
+- build: upgrade dependency gits_inspector to ^3.2.4
+
 ## 3.1.1
 
 - build: upgrade dependency gits_inspector to ^3.2.1
